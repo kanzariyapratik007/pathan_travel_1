@@ -1,0 +1,235 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<style>
+    .confirmation-wrapper {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+    
+    .confirmation-card {
+        max-width: 800px;
+        width: 100%;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(25, 135, 84, 0.1);
+        overflow: hidden;
+    }
+    
+    .confirmation-header {
+        background: linear-gradient(135deg, #198754, #146c43);
+        color: white;
+        padding: 40px;
+        text-align: center;
+    }
+    
+    .checkmark {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 40px;
+    }
+    
+    .confirmation-body {
+        padding: 40px;
+    }
+    
+    .booking-details {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+    
+    .detail-label {
+        color: #6c757d;
+        font-weight: 500;
+    }
+    
+    .detail-value {
+        font-weight: 600;
+        color: #212529;
+    }
+    
+    .amount-green {
+        color: #198754;
+        font-weight: bold;
+    }
+    
+    .amount-red {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .btn-action {
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .btn-download {
+        background: #198754;
+        color: white;
+        border: none;
+    }
+    
+    .btn-download:hover {
+        background: #146c43;
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .btn-home {
+        background: #f8f9fa;
+        color: #333;
+        border: 1px solid #dee2e6;
+    }
+    
+    .btn-home:hover {
+        background: #e9ecef;
+        color: #333;
+        transform: translateY(-2px);
+    }
+    
+    .info-box {
+        background: #e8f5e9;
+        border-left: 4px solid #198754;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 30px;
+    }
+</style>
+
+<div class="confirmation-wrapper">
+    <div class="confirmation-card">
+        <!-- Header -->
+        <div class="confirmation-header">
+            <div class="checkmark">✓</div>
+            <h1 class="display-5 fw-bold mb-3">Booking Confirmed!</h1>
+            <p class="lead mb-0">Thank you for choosing Pathan Travels</p>
+        </div>
+
+        <!-- Body -->
+        <div class="confirmation-body">
+            <div class="text-center mb-4">
+                <h3>Hello, {{ booking.name }}! 👋</h3>
+                <p class="text-muted">Your booking has been confirmed successfully</p>
+            </div>
+
+            <!-- Booking Details -->
+            <div class="booking-details">
+                <h5 class="text-center mb-4">📋 Booking Summary</h5>
+
+                <div class="detail-item">
+                    <span class="detail-label">Booking ID</span>
+                    <span class="detail-value">{{ booking.invoice_no }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Route</span>
+                    <span class="detail-value">{{ booking.pickup }} → {{ booking.drop }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Distance</span>
+                    <span class="detail-value">{{ booking.distance_km }} KM</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Travel Date</span>
+                    <span class="detail-value">{{ booking.travel_date }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Travel Time</span>
+                    <span class="detail-value">{{ booking.travel_time|time:"h:i A" }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Total Fare</span>
+                    <span class="detail-value amount-green">₹{{ booking.total_price }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Advance Paid</span>
+                    <span class="detail-value amount-green">₹{{ booking.advance_paid }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Remaining Amount</span>
+                    <span class="detail-value amount-red">₹{{ booking.remaining_amount }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value">
+                        <span class="badge bg-success">{{ booking.get_status_display }}</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{% url 'invoice_pdf' booking.id %}" class="btn btn-download btn-action">
+                    <i class="fas fa-download"></i> Download Invoice
+                </a>
+
+                <a href="{% url 'home' %}" class="btn btn-home btn-action">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+
+            <!-- Information -->
+            <div class="info-box mt-4">
+                <h6><i class="fas fa-info-circle me-2"></i> Important Information</h6>
+                <p class="mb-0">
+                    • The remaining amount of ₹{{ booking.remaining_amount }} should be paid to the driver.<br> • Please arrive 15 minutes before pickup time.<br> • Contact us at <strong>9879230065</strong> for any queries.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Print page when Print button is clicked
+        const printBtn = document.querySelector('.btn-print');
+        if (printBtn) {
+            printBtn.addEventListener('click', function() {
+                window.print();
+            });
+        }
+    });
+</script>
+{% endblock %}

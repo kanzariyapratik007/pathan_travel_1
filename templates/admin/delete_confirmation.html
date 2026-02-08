@@ -1,0 +1,144 @@
+{% extends "admin/base_site.html" %} {% load i18n %} {% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> &rsaquo; <a href="{% url 'admin:app_list' app_label='packages' %}">Packages</a> &rsaquo; <a href="{% url 'admin:packages_packagebooking_changelist' %}">Package Bookings</a> &rsaquo; Delete Package
+    Booking
+</div>
+{% endblock %} {% block content %}
+<style>
+    .delete-confirmation {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .danger-box {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+    }
+    
+    .info-box {
+        background: #d1ecf1;
+        border: 1px solid #bee5eb;
+        color: #0c5460;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+    }
+    
+    .booking-details {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+    }
+</style>
+
+<div class="delete-confirmation">
+    <h1>🗑️ Delete Package Booking</h1>
+
+    <div class="danger-box">
+        <h4><i class="fas fa-exclamation-triangle"></i> Warning!</h4>
+        <p>You are about to delete the following package booking. This action <strong>CANNOT</strong> be undone!</p>
+    </div>
+
+    <div class="booking-details">
+        <h4>Package Booking Details:</h4>
+        <table class="table">
+            <tr>
+                <th>Booking ID:</th>
+                <td><strong>{{ booking.invoice_no }}</strong></td>
+            </tr>
+            <tr>
+                <th>Customer:</th>
+                <td>{{ booking.customer_name }}</td>
+            </tr>
+            <tr>
+                <th>Phone:</th>
+                <td>{{ booking.customer_phone }}</td>
+            </tr>
+            <tr>
+                <th>Package:</th>
+                <td>{{ booking.package.name }}</td>
+            </tr>
+            <tr>
+                <th>Route:</th>
+                <td>{{ booking.package.pickup_location }} → {{ booking.package.drop_location }}</td>
+            </tr>
+            <tr>
+                <th>Passengers:</th>
+                <td>{{ booking.passengers_count }}</td>
+            </tr>
+            <tr>
+                <th>Total Amount:</th>
+                <td>₹{{ booking.total_amount }}</td>
+            </tr>
+            <tr>
+                <th>Status:</th>
+                <td><span class="badge bg-{% if booking.status == 'CONFIRMED' %}success{% elif booking.status == 'PENDING' %}warning{% else %}secondary{% endif %}">
+                    {{ booking.get_status_display }}
+                </span></td>
+            </tr>
+            <tr>
+                <th>Created:</th>
+                <td>{{ booking.created_at|date:"d-m-Y H:i" }}</td>
+            </tr>
+        </table>
+    </div>
+
+    {% if booking.status in 'CONFIRMED,COMPLETED' %}
+    <div class="info-box">
+        <h4><i class="fas fa-info-circle"></i> Cannot Delete</h4>
+        <p>This package booking is <strong>{{ booking.get_status_display }}</strong>. You cannot delete confirmed/completed package bookings.</p>
+        <p>Please <strong>cancel</strong> the booking first, then delete it.</p>
+        <a href="{% url 'admin:packages_packagebooking_change' object_id=booking.id %}" class="button">
+            <i class="fas fa-arrow-left"></i> Go Back
+        </a>
+    </div>
+    {% else %}
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="info-box">
+            <h4><i class="fas fa-check-circle"></i> Confirm Deletion</h4>
+            <p>Are you sure you want to delete this package booking?</p>
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                <label class="form-check-label" for="confirmDelete">
+                    Yes, I want to delete this package booking permanently
+                </label>
+            </div>
+        </div>
+
+        <div class="submit-row">
+            <button type="submit" class="button btn btn-danger" style="background:#dc3545;color:white;padding:10px 20px;">
+                <i class="fas fa-trash"></i> Delete Permanently
+            </button>
+
+            <a href="{% url 'admin:packages_packagebooking_change' object_id=booking.id %}" class="button btn btn-secondary" style="margin-left:10px;">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteBtn = document.querySelector('button[type="submit"]');
+        const checkbox = document.getElementById('confirmDelete');
+
+        deleteBtn.disabled = true;
+
+        checkbox.addEventListener('change', function() {
+            deleteBtn.disabled = !this.checked;
+        });
+    });
+</script>
+{% endblock %}

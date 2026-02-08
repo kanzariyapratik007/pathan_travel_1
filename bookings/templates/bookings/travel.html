@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Successful | Pathan Tours & Travels</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4fff4;
+            font-family: Arial, sans-serif;
+        }
+        
+        .success-box {
+            max-width: 600px;
+            margin: 60px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 128, 0, 0.25);
+        }
+        
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 18px;
+            border-radius: 8px;
+            width: 100%;
+        }
+        
+        .whatsapp-btn:hover {
+            background: #1ebe5d;
+        }
+        
+        .label {
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="success-box text-center">
+
+        <h2 class="text-success mb-2">✅ Booking Successful</h2>
+        <p class="mb-4">Thank you <b>{{ booking.name }}</b> 🙏</p>
+
+        <hr>
+
+        <div class="text-start">
+            <p><span class="label">📍 Route:</span> {{ booking.pickup }} → {{ booking.drop }}</p>
+
+            <p><span class="label">🚗 Distance:</span> {{ booking.distance_km }} KM</p>
+
+            <p><span class="label">💰 Total Fare:</span> ₹{{ booking.total_price }}</p>
+
+            <p>
+                <span class="label text-success">💵 Advance Paid:</span> ₹{{ booking.advance_paid }}
+            </p>
+
+            <!-- ✅ REMAINING AMOUNT (AUTO CALCULATED) -->
+            <p>
+                <span class="label text-danger">💳 Remaining Amount:</span> ₹{{ booking.remaining_amount }}
+            </p>
+
+            <p>
+                <span class="label">⏳ Status:</span>
+                <span class="badge bg-warning text-dark">
+                {{ booking.get_status_display }}
+            </span>
+            </p>
+        </div>
+
+        {% if booking.remaining_amount > 0 %}
+        <div class="alert alert-success mt-3">
+            👉 Remaining amount will be paid at trip start
+        </div>
+        {% else %}
+        <div class="alert alert-info mt-3">
+            ✅ Full payment received
+        </div>
+        {% endif %}
+
+        <!-- WhatsApp Button -->
+        <button class="whatsapp-btn mt-3" onclick="sendWhatsApp()">
+        📲 Send Booking Details on WhatsApp
+    </button>
+        <a href="{% url 'invoice' booking.id %}" class="btn btn-primary w-100 mt-2">
+   📄 Download Invoice (PDF)
+</a>
+
+
+        <br><br>
+
+        <a href="/" class="btn btn-outline-success">⬅ Back to Home</a>
+    </div>
+
+    <!-- WhatsApp Script -->
+    <script>
+        function sendWhatsApp() {
+            let phone = "91{{ booking.phone }}";
+
+            let msg = `Hello {{ booking.name }} 👋
+Your booking request is received with Pathan Tours & Travels 🚗
+
+📍 Route: {{ booking.pickup }} → {{ booking.drop }}
+🚗 Distance: {{ booking.distance_km }} KM
+💰 Total Fare: ₹{{ booking.total_price }}
+💵 Advance Paid: ₹{{ booking.advance_paid }}
+💳 Remaining: ₹{{ booking.remaining_amount }}
+⏳ Status: {{ booking.get_status_display }}
+
+We will contact you shortly for confirmation 🙏`;
+
+            window.open(
+                `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,
+                '_blank'
+            );
+        }
+    </script>
+
+</body>
+
+</html>

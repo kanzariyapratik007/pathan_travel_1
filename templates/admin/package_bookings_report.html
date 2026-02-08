@@ -1,0 +1,273 @@
+{% extends "admin/base_site.html" %} {% load static %} {% block extrahead %}
+<style>
+    .report-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 20px 0;
+    }
+    
+    .filter-box {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        border: 1px solid #dee2e6;
+    }
+    
+    .stats-box {
+        background: linear-gradient(135deg, #198754, #146c43);
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .btn-download {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-download:hover {
+        background: #c82333;
+        color: white;
+    }
+    
+    .btn-filter {
+        background: #198754;
+        color: white;
+    }
+    
+    .btn-filter:hover {
+        background: #146c43;
+        color: white;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="report-container">
+    <h1>📊 Package Bookings Report</h1>
+
+    <!-- Filters -->
+    <div class="filter-box">
+        <h4><i class="fas fa-filter"></i> Filters</h4>
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-select">
+                    <option value="">All Status</option>
+                    {% for code, name in status_choices %}
+                    <option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Package</label>
+                <select name="package" class="form-select">
+                    <option value="">All Packages</option>
+                    {% for package in packages %}
+                    <option value="{{ package.id }}" {% if package_id == package.id|stringformat:"i" %}selected{% endif %}>
+                        {{ package.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">From Date</label>
+                <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">To Date</label>
+                <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-filter">
+                    <i class="fas fa-search"></i> Apply Filters
+                </button>
+                <a href="{% url 'admin_package_report' %}" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> Clear Filters
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Statistics -->
+    <div class="stats-box">
+        <div class="row">
+            <div class="col-md-3">
+                <h5>Total Bookings</h5>
+                <h2>{{ total_bookings }}</h2>
+            </div>
+            <div class="col-md-3">
+                <h5>Total Amount</h5>
+                <h2>₹{{ total_amount }}</h2>
+            </div>
+            <div class="col-md-3">
+                <h5>Total Advance</h5>
+                <h2>₹{{ total_advance }}</h2>
+            </div>
+            <div class="col-md-3">
+                <h5>Total Remaining</h5>
+                <h2>₹{{ total_remaining }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Distribution -->
+    {% if status_counts %}
+    <div class="mb-4">
+        <h5>Status Distribution</h5>
+        <div class="d-flex flex-wrap gap-2">
+            {% for status, count in status_counts.items %}
+            <span class="status-badge" style="background: 
+                {% if status == 'CONFIRMED' %}#198754
+                {% elif status == 'PENDING' %}#ffc107
+                {% elif status == 'COMPLETED' %}#0dcaf0
+                {% elif status == 'CANCELLED' %}#dc3545
+                {% else %}#6c757d{% endif %};">
+                {{ status }}: {{ count }}
+            </span> {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Download Button -->
+    <div class="mb-4">
+        <a href="{% url 'admin_package_pdf' %}?{{ request.GET.urlencode }}" class="btn-download">
+            <i class="fas fa-file-pdf"></i> Download PDF Report
+        </a>
+    </div>
+
+    <!-- Bookings Table -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Package</th>
+                    <th>Route</th>
+                    <th>Passengers</th>
+                    <th>Travel Date</th>
+                    <th>Total</th>
+                    <th>Advance</th>
+                    <th>Remaining</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>
+                        <a href="/admin/packages/packagebooking/{{ booking.id }}/change/" target="_blank" style="color: #198754;">
+                            {{ booking.invoice_no }}
+                        </a>
+                    </td>
+                    <td>{{ booking.customer_name }}</td>
+                    <td>{{ booking.customer_phone }}</td>
+                    <td>{{ booking.package.name }}</td>
+                    <td>{{ booking.package.pickup_location }} → {{ booking.package.drop_location }}</td>
+                    <td>{{ booking.passengers_count }}</td>
+                    <td>{{ booking.travel_date }}</td>
+                    <td>₹{{ booking.total_amount }}</td>
+                    <td>₹{{ booking.advance_paid }}</td>
+                    <td>₹{{ booking.remaining_amount }}</td>
+                    <td>
+                        <span class="badge bg-{% if booking.status == 'CONFIRMED' %}success
+                            {% elif booking.status == 'PENDING' %}warning
+                            {% elif booking.status == 'COMPLETED' %}info
+                            {% elif booking.status == 'CANCELLED' %}danger
+                            {% else %}secondary{% endif %}">
+                            {{ booking.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ booking.created_at|date:"d-m-Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="12" class="text-center">No bookings found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination if needed -->
+    {% if bookings.has_other_pages %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if bookings.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ bookings.previous_page_number }}&{{ request.GET.urlencode|cut:'page=' }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %} {% for num in bookings.paginator.page_range %} {% if bookings.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}&{{ request.GET.urlencode|cut:'page=' }}">{{ num }}</a>
+            </li>
+            {% endif %} {% endfor %} {% if bookings.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ bookings.next_page_number }}&{{ request.GET.urlencode|cut:'page=' }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Generate PDF button with current filters -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-format dates for display
+        const dateInputs = document.querySelectorAll('input[type="date"]');
+        dateInputs.forEach(input => {
+            if (input.value) {
+                const date = new Date(input.value);
+                input.value = date.toISOString().split('T')[0];
+            }
+        });
+
+        // Confirm before downloading large reports
+        const downloadBtn = document.querySelector('.btn-download');
+        if (downloadBtn && {
+                {
+                    total_bookings
+                }
+            } > 100) {
+            downloadBtn.addEventListener('click', function(e) {
+                if (!confirm('This report contains {{ total_bookings }} bookings. The PDF generation may take a moment. Continue?')) {
+                    e.preventDefault();
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

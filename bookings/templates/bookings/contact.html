@@ -1,0 +1,370 @@
+{% extends 'base.html' %} {% block content %}
+
+<style>
+    .contact-container {
+        max-width: 850px;
+        margin: auto;
+        padding: 30px 20px 50px;
+    }
+    
+    .contact-header {
+        background: linear-gradient(135deg, #1a6b3b 0%, #28a745 100%);
+        color: white;
+        padding: 40px 30px;
+        border-radius: 15px;
+        margin-bottom: 40px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .contact-info-box {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border-left: 5px solid #28a745;
+        transition: transform 0.3s ease;
+    }
+    
+    .contact-info-box:hover {
+        transform: translateY(-5px);
+    }
+    
+    .contact-icon {
+        width: 50px;
+        height: 50px;
+        background: #e9f7ef;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+        color: #28a745;
+        font-size: 1.5rem;
+    }
+    
+    .contact-form-container {
+        background: white;
+        border-radius: 12px;
+        padding: 35px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-top: 20px;
+    }
+    
+    .form-control,
+    .form-select {
+        border-radius: 8px;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+    }
+    
+    .submit-btn {
+        background: linear-gradient(to right, #1a6b3b, #28a745);
+        border: none;
+        padding: 14px 35px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    }
+    
+    .contact-method {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+    }
+    
+    .contact-method i {
+        font-size: 1.5rem;
+        margin-right: 15px;
+        color: #28a745;
+        min-width: 30px;
+    }
+    
+    .working-hours {
+        background-color: #fff8e1;
+        border-left: 5px solid #ffc107;
+    }
+    
+    .whatsapp-contact {
+        background-color: #e8f5e9;
+        border-left: 5px solid #25d366;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .whatsapp-contact:hover {
+        background-color: #d4edda;
+    }
+    
+    .map-placeholder {
+        height: 250px;
+        background: linear-gradient(45deg, #e9f7ef, #c8e6c9);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #1a6b3b;
+        font-weight: 600;
+        margin-top: 20px;
+        overflow: hidden;
+    }
+    
+    .map-placeholder i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+    }
+    
+    .alert-success {
+        border-radius: 10px;
+        padding: 15px 20px;
+        border-left: 5px solid #28a745;
+    }
+    
+    @media (max-width: 768px) {
+        .contact-container {
+            padding: 20px 15px 30px;
+        }
+        .contact-header {
+            padding: 30px 20px;
+        }
+        .contact-form-container {
+            padding: 25px 20px;
+        }
+    }
+</style>
+
+<div class="contact-container">
+    <!-- Header Section -->
+    <div class="contact-header">
+        <h1 class="mb-3">📞 Contact Pathan Travels</h1>
+        <p class="lead mb-0">We're here to help you plan your perfect journey. Get in touch with our travel experts!</p>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong> {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %} {% endif %}
+
+    <!-- Contact Information -->
+    <div class="row mb-5">
+        <div class="col-lg-6 mb-4">
+            <div class="contact-info-box">
+                <div class="contact-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h4>Our Office</h4>
+                <p class="mb-1"><strong>Address:</strong></p>
+                <p>123 Main Street, Ahmedabad, Gujarat, India - 380001</p>
+
+                <div class="map-placeholder">
+                    <div class="text-center">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Ahmedabad Location Map</p>
+                        <small>Interactive map would appear here</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="contact-info-box">
+                <div class="contact-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h4>Contact Details</h4>
+
+                <div class="contact-method">
+                    <i class="fas fa-phone-alt"></i>
+                    <div>
+                        <p class="mb-1"><strong>Phone:</strong></p>
+                        <p>+91 9876543210</p>
+                    </div>
+                </div>
+
+                <div class="contact-method">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <p class="mb-1"><strong>Email:</strong></p>
+                        <p>info@pathantravels.com</p>
+                    </div>
+                </div>
+
+                <div class="contact-method whatsapp-contact" onclick="window.open('https://wa.me/919876543210', '_blank')">
+                    <i class="fab fa-whatsapp"></i>
+                    <div>
+                        <p class="mb-1"><strong>WhatsApp:</strong></p>
+                        <p>+91 9876543210 <span class="badge bg-success ms-2">Click to chat</span></p>
+                    </div>
+                </div>
+
+                <div class="contact-method working-hours">
+                    <i class="fas fa-calendar-alt"></i>
+                    <div>
+                        <p class="mb-1"><strong>Working Hours:</strong></p>
+                        <p class="mb-0">Monday - Sunday: 8:00 AM - 8:00 PM</p>
+                        <small class="text-muted">We're available 7 days a week!</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="contact-form-container">
+        <h3 class="mb-4">Send Us a Message</h3>
+        <p class="text-muted mb-4">Fill out the form below and our travel experts will get back to you within 24 hours.</p>
+
+        <form method="POST" action="{% url 'contact' %}" id="contactForm">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="name" class="form-label">Your Name *</label>
+                    <input type="text" name="name" id="name" class="form-control" placeholder="Enter your full name" required>
+                    <div class="invalid-feedback">Please provide your name.</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Your Email *</label>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email address" required>
+                    <div class="invalid-feedback">Please provide a valid email.</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="phone" class="form-label">Phone Number (Optional)</label>
+                    <input type="tel" name="phone" id="phone" class="form-control" placeholder="Enter your phone number">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="subject" class="form-label">Subject (Optional)</label>
+                    <select name="subject" id="subject" class="form-select">
+                        <option value="" selected>Select a topic</option>
+                        <option value="booking">Booking Inquiry</option>
+                        <option value="tour">Tour Packages</option>
+                        <option value="custom">Custom Itinerary</option>
+                        <option value="feedback">Feedback</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="message" class="form-label">Your Message *</label>
+                <textarea name="message" id="message" class="form-control" rows="5" placeholder="Tell us about your travel plans, questions, or requirements..." required></textarea>
+                <div class="invalid-feedback">Please provide your message.</div>
+                <div class="form-text mt-2">Please provide as much detail as possible for a better response.</div>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane me-2"></i> Send Message
+                </button>
+            </div>
+
+            <p class="text-muted text-center mt-3">
+                <small>By submitting this form, you agree to our <a href="#">privacy policy</a>. We'll never share your information with third parties.</small>
+            </p>
+        </form>
+    </div>
+
+    <!-- Additional Info -->
+    <div class="row mt-5">
+        <div class="col-md-4 mb-3">
+            <div class="text-center p-3 border rounded">
+                <i class="fas fa-headset fa-2x text-success mb-3"></i>
+                <h5>24/7 Support</h5>
+                <p class="small">Emergency support available for existing customers</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="text-center p-3 border rounded">
+                <i class="fas fa-shield-alt fa-2x text-success mb-3"></i>
+                <h5>Trusted Agency</h5>
+                <p class="small">10+ years of experience in travel services</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="text-center p-3 border rounded">
+                <i class="fas fa-tags fa-2x text-success mb-3"></i>
+                <h5>Best Price Guarantee</h5>
+                <p class="small">We offer the best prices for all travel packages</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for form validation -->
+<script>
+    // Form validation
+    (function() {
+        'use strict';
+
+        // Fetch the form we want to apply validation to
+        var form = document.getElementById('contactForm');
+
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            form.classList.add('was-validated');
+        }, false);
+
+        // Auto-format phone number
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 0) {
+                    if (value.length <= 5) {
+                        value = value.replace(/(\d{0,5})/, '$1');
+                    } else if (value.length <= 10) {
+                        value = value.replace(/(\d{5})(\d{0,5})/, '$1-$2');
+                    } else {
+                        value = value.replace(/(\d{5})(\d{5})(\d{0,5})/, '$1-$2-$3');
+                    }
+                }
+                e.target.value = value;
+            });
+        }
+
+        // Success message animation
+        const successAlert = document.querySelector('.alert-success');
+        if (successAlert) {
+            // Trigger a fade-out after 5 seconds
+            setTimeout(() => {
+                successAlert.classList.add('fade');
+                setTimeout(() => {
+                    successAlert.style.display = 'none';
+                }, 500);
+            }, 5000);
+        }
+    })();
+</script>
+
+<!-- Font Awesome for icons (add to base.html if not already included) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> {% endblock %}

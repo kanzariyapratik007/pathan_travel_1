@@ -1,0 +1,12 @@
+{% extends "admin/change_list.html" %} {% load i18n admin_urls %} {% block object-tools-items %} {{ block.super }}
+<li>
+    <a href="{% url 'admin_package_report' %}" class="btn btn-success" style="background: #198754; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none;">
+        <i class="fas fa-file-pdf"></i> Generate Report
+    </a>
+</li>
+<li>
+    <a href="{% url 'admin_package_pdf' %}" class="btn btn-danger" style="background: #dc3545; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none;">
+        <i class="fas fa-download"></i> Download PDF
+    </a>
+</li>
+{% endblock %}

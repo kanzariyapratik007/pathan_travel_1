@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5">🎒 Our Tour Packages</h1>
+
+    <div class="row">
+        {% for package in packages %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+                {% if package.cover_image %}
+                <img src="{{ package.cover_image.url }}" class="card-img-top" alt="{{ package.name }}" style="height: 200px; object-fit: cover;"> {% else %}
+                <img src="{% static 'images/default-package.jpg' %}" class="card-img-top" alt="Default" style="height: 200px; object-fit: cover;"> {% endif %}
+
+                <div class="card-body">
+                    <span class="badge bg-success mb-2">{{ package.get_package_type_display }}</span>
+                    <h5 class="card-title">{{ package.name }}</h5>
+                    <p class="card-text">
+                        <i class="fas fa-route me-2"></i> {{ package.pickup_location }} → {{ package.drop_location }}<br>
+                        <i class="fas fa-road me-2"></i> {{ package.distance_km }} KM<br>
+                        <i class="fas fa-calendar-alt me-2"></i> {{ package.duration_days }} Day(s)<br>
+                        <i class="fas fa-car me-2"></i> {{ package.get_vehicle_type_display }}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="text-success mb-0">₹{{ package.final_price }}</h4>
+                        <a href="{% url 'package_detail' package.id %}" class="btn btn-success">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <div class="alert alert-info">
+                No packages available at the moment.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

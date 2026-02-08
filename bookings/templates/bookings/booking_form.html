@@ -1,0 +1,126 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="row justify-content-center mb-4">
+    <div class="col-md-8 text-center">
+        <div class="p-4 rounded" style="background: linear-gradient(135deg,#198754,#146c43);">
+            <h1 class="text-white mb-3">🚖 Book Your Journey</h1>
+            <p class="text-white mb-0">Confirm booking with ₹1000 advance</p>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <div class="card shadow-lg border-0">
+
+            <div class="card-header text-white text-center py-4" style="background: linear-gradient(135deg,#198754,#0d6e3d);">
+                <h3 class="mb-0">
+                    <i class="fas fa-map-marked-alt me-2"></i>Trip Booking Form
+                </h3>
+                <p class="mb-0 opacity-75">Pay ₹1000 advance • Remaining after trip</p>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+
+                <form method="POST" action="{% url 'book_trip' %}" class="needs-validation" novalidate>
+                    {% csrf_token %}
+
+                    <!-- PERSONAL INFO -->
+                    <div class="section-card mb-4">
+                        <h5 class="text-success mb-3">
+                            <i class="fas fa-user me-2"></i>Personal Info
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Full Name *</label>
+                                <input type="text" name="name" class="form-control form-control-lg" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Phone *</label>
+                                <input type="tel" name="phone" class="form-control form-control-lg" pattern="[0-9]{10}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TRIP DETAILS -->
+                    <div class="section-card mb-4">
+                        <h5 class="text-success mb-3">
+                            <i class="fas fa-route me-2"></i>Trip Details
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Pickup *</label>
+                                <input type="text" name="pickup" class="form-control form-control-lg" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Drop *</label>
+                                <input type="text" name="drop" class="form-control form-control-lg" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Distance (KM) *</label>
+                                <input type="number" name="distance" class="form-control form-control-lg" min="1" required>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Travel Date *</label>
+                                <input type="date" name="travel_date" class="form-control form-control-lg" min="{{ today|date:'Y-m-d' }}" required>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Travel Time *</label>
+                                <input type="time" name="travel_time" class="form-control form-control-lg" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUBMIT -->
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-success btn-lg px-5 py-3">
+                            🚀 Continue to Pay ₹1000
+                        </button>
+
+                        <p class="text-success fw-bold mt-3">
+                            💰 Fixed ₹1000 Advance • Safe & Secure Razorpay Payment
+                        </p>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="card-footer text-center bg-light py-3">
+                <i class="fas fa-clock text-success me-1"></i> Average confirmation time <b>15 minutes</b>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .section-card {
+        background: #f8f9fa;
+        border-left: 4px solid #198754;
+        border-radius: 10px;
+        padding: 25px;
+    }
+    
+    .form-control-lg:focus {
+        border-color: #198754;
+        box-shadow: 0 0 0 .25rem rgba(25, 135, 84, .25);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, #198754, #146c43);
+        border: none;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> {% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Complete Payment</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Booking Summary -->
+                    <div class="alert alert-info">
+                        <h5>Booking Summary</h5>
+                        <p class="mb-1"><strong>Package:</strong> {{ booking.package.name }}</p>
+                        <p class="mb-1"><strong>Customer:</strong> {{ booking.customer_name }}</p>
+                        <p class="mb-1"><strong>Route:</strong> {{ booking.package.pickup_location }} → {{ booking.package.drop_location }}</p>
+                        <p class="mb-1"><strong>Travel Date:</strong> {{ booking.travel_date }}</p>
+                        <p class="mb-0"><strong>Advance Amount:</strong> ₹{{ booking.advance_paid }}</p>
+                    </div>
+
+                    <!-- Payment Form -->
+                    <form method="POST" action="{% url 'package_payment_success' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+                        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+                        <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+
+                        <div class="text-center my-4">
+                            <h4>Amount to Pay: ₹{{ booking.advance_paid }}</h4>
+                            <button type="button" class="btn btn-success btn-lg mt-3" id="pay-btn">
+                                <i class="fas fa-lock me-2"></i> Pay Now
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Alternative UPI Payment -->
+                    <div class="mt-4 border-top pt-4">
+                        <h5>UPI Payment Option</h5>
+                        <p class="text-muted">You can also pay via UPI</p>
+                        <div class="text-center">
+                            <img src="{% static 'images/upi_qr.png' %}" alt="UPI QR" class="img-fluid" style="max-width: 200px;">
+                            <p class="mt-2">
+                                <strong>UPI ID:</strong> 9879230065@ybl<br> After payment, share screenshot on WhatsApp: 9879230065
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Razorpay Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ payment.amount }}",
+        "currency": "{{ payment.currency }}",
+        "name": "Pathan Tours & Travels",
+        "description": "Package Booking Advance",
+        "order_id": "{{ payment.id }}",
+        "handler": function(response) {
+            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+            document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+            document.getElementById('razorpay_signature').value = response.razorpay_signature;
+            document.querySelector('form').submit();
+        },
+        "prefill": {
+            "name": "{{ booking.customer_name }}",
+            "contact": "{{ booking.customer_phone }}",
+            "email": "{{ booking.customer_email|default:'customer@example.com' }}"
+        },
+        "theme": {
+            "color": "#198754"
+        }
+    };
+
+    document.getElementById('pay-btn').onclick = function(e) {
+        var rzp = new Razorpay(options);
+        rzp.open();
+        e.preventDefault();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathan Travels Gallery - Our Memories</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f8f8 0%, #e6f0ff 100%);
+            min-height: 100vh;
+        }
+        /* Pathan Style Header */
+        
+        .pathan-header {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            padding: 1.5rem 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pathan-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #ff9900, #ff6600);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #2a5298;
+            font-weight: bold;
+            border: 2px solid #ff9900;
+            flex-shrink: 0;
+        }
+        
+        .company-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .urdu-text {
+            font-family: 'Noto Nastaliq Urdu', 'Segoe UI', serif;
+            font-size: 1.3rem;
+            color: #ffcc66;
+            margin-top: -2px;
+            text-align: center;
+        }
+        
+        .tagline {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        /* Navigation - Pathan Style */
+        
+        .pathan-nav {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            padding: 0.8rem 10px;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .pathan-nav-btn {
+            text-decoration: none;
+            color: #2a5298;
+            padding: 10px 15px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            flex: 1;
+            min-width: 120px;
+            justify-content: center;
+        }
+        
+        .pathan-nav-btn:hover {
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(42, 82, 152, 0.3);
+        }
+        
+        .pathan-nav-btn.active {
+            background: linear-gradient(135deg, #ff9900, #ff6600);
+            color: white;
+            border-color: #ff9900;
+        }
+        /* Gallery Heading */
+        
+        .gallery-heading {
+            text-align: center;
+            padding: 2rem 15px;
+            background: white;
+            margin: 15px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gallery-heading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #1e3c72, #ff9900, #1e3c72);
+        }
+        
+        .main-title {
+            color: #1e3c72;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+            padding: 0 10px;
+        }
+        
+        .main-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(to right, #ff9900, #ff6600);
+            border-radius: 2px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 800px;
+            margin: 15px auto;
+            line-height: 1.5;
+            padding: 0 10px;
+        }
+        /* Filter Buttons - Pathan Style */
+        
+        .filter-section {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        
+        .filter-title {
+            color: #1e3c72;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 5px;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 5px 15px;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .filter-buttons::-webkit-scrollbar {
+            height: 4px;
+        }
+        
+        .filter-buttons::-webkit-scrollbar-thumb {
+            background: #2a5298;
+            border-radius: 2px;
+        }
+        
+        .pathan-filter-btn {
+            padding: 10px 18px;
+            border: 2px solid #1e3c72;
+            background: white;
+            color: #1e3c72;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .pathan-filter-btn:hover {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(30, 60, 114, 0.2);
+        }
+        
+        .pathan-filter-btn.active {
+            background: linear-gradient(135deg, #ff9900, #ff6600);
+            color: white;
+            border-color: #ff9900;
+        }
+        /* Gallery Grid */
+        
+        .gallery-container {
+            max-width: 1300px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+        
+        .gallery-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .gallery-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            display: block;
+        }
+        
+        .gallery-card:hover .card-image {
+            transform: scale(1.05);
+        }
+        
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #ff9900, #ff6600);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+        
+        .card-content {
+            padding: 15px;
+        }
+        
+        .card-title {
+            color: #1e3c72;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
+        .card-location {
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+        
+        .card-date {
+            color: #888;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        /* Highlight Section */
+        
+        .highlight-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 15px;
+        }
+        
+        .section-title {
+            text-align: center;
+            color: #1e3c72;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, #ff9900, #ff6600);
+            border-radius: 2px;
+        }
+        
+        .highlight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
+        }
+        
+        .highlight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .highlight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .highlight-icon {
+            font-size: 2.2rem;
+            color: #2a5298;
+            margin-bottom: 12px;
+        }
+        
+        .highlight-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6600;
+            margin: 8px 0;
+        }
+        
+        .highlight-text {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        /* Pathan Travels Footer */
+        
+        .pathan-footer {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            padding: 35px 15px 15px;
+            margin-top: 40px;
+            position: relative;
+        }
+        
+        .footer-top {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #ffcc66;
+            position: relative;
+            padding-bottom: 8px;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #ff9900;
+        }
+        
+        .footer-section p {
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .contact-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .contact-info i {
+            margin-top: 2px;
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            opacity: 0.8;
+            font-size: 0.85rem;
+        }
+        /* Modal */
+        
+        .pathan-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            padding: 10px;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .modal-content {
+            max-width: 95%;
+            max-height: 85%;
+            border-radius: 8px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            object-fit: contain;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: white;
+            font-size: 35px;
+            cursor: pointer;
+            z-index: 1001;
+            transition: color 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-modal:hover {
+            color: #ff9900;
+        }
+        /* Mobile Responsive Design */
+        
+        @media (max-width: 768px) {
+            .logo-container {
+                flex-direction: row;
+                gap: 12px;
+            }
+            .logo {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            .company-name {
+                font-size: 1.6rem;
+            }
+            .urdu-text {
+                font-size: 1.2rem;
+            }
+            .nav-container {
+                gap: 8px;
+            }
+            .pathan-nav-btn {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+                min-width: 110px;
+                gap: 4px;
+            }
+            .main-title {
+                font-size: 1.6rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            .card-image {
+                height: 200px;
+            }
+            .highlight-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .pathan-header {
+                padding: 1.2rem 15px;
+            }
+            .logo-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .logo {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            .company-name {
+                font-size: 1.4rem;
+            }
+            .urdu-text {
+                font-size: 1.1rem;
+            }
+            .tagline {
+                font-size: 0.8rem;
+            }
+            .nav-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 5px;
+                padding: 0.5rem 10px;
+            }
+            .pathan-nav-btn {
+                width: 100%;
+                margin: 0;
+                justify-content: center;
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            .main-title {
+                font-size: 1.4rem;
+            }
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .card-image {
+                height: 190px;
+            }
+            .filter-buttons {
+                gap: 8px;
+            }
+            .pathan-filter-btn {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+            .highlight-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .highlight-card {
+                padding: 18px 12px;
+            }
+            .footer-top {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .modal-content {
+                max-width: 98%;
+                max-height: 80%;
+            }
+            .close-modal {
+                top: 10px;
+                right: 15px;
+                font-size: 30px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .company-name {
+                font-size: 1.3rem;
+            }
+            .urdu-text {
+                font-size: 1rem;
+            }
+            .main-title {
+                font-size: 1.3rem;
+            }
+            .pathan-nav-btn {
+                font-size: 0.8rem;
+                padding: 8px;
+            }
+            .card-title {
+                font-size: 1rem;
+            }
+            .highlight-number {
+                font-size: 1.8rem;
+            }
+            .highlight-text {
+                font-size: 0.85rem;
+            }
+        }
+        /* Touch improvements for mobile */
+        
+        @media (hover: none) and (pointer: coarse) {
+            .gallery-card:hover {
+                transform: none;
+            }
+            .pathan-nav-btn:hover,
+            .pathan-filter-btn:hover {
+                transform: none;
+            }
+            .gallery-card:active {
+                transform: scale(0.98);
+            }
+            .pathan-nav-btn:active,
+            .pathan-filter-btn:active {
+                transform: scale(0.98);
+            }
+        }
+    </style>
+    <!-- Google Fonts for Urdu -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Pathan Travels Header -->
+    <header class="pathan-header">
+        <div class="logo-container">
+            <div class="logo">P.Tra</div>
+            <div>
+                <h1 class="company-name">पठान ट्रैवल्स</h1>
+                <div class="urdu-text">پٹھان ٹریولز</div>
+            </div>
+        </div>
+        <p class="tagline">20 Years of Trusted Travel Services | Trusted Travel Services Since 20 Years</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="pathan-nav">
+        <div class="nav-container">
+            <a href="/" class="pathan-nav-btn">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="/packages" class="pathan-nav-btn">
+                <i class="fas fa-suitcase"></i> Packages
+            </a>
+            <a href="/gallery" class="pathan-nav-btn active">
+                <i class="fas fa-images"></i> Gallery
+            </a>
+            <a href="/book" class="pathan-nav-btn">
+                <i class="fas fa-ticket-alt"></i> Booking
+            </a>
+            <a href="/contact" class="pathan-nav-btn">
+                <i class="fas fa-phone-alt"></i> Contact
+            </a>
+
+        </div>
+    </nav>
+
+    <!-- Main Gallery Section -->
+    <section class="gallery-heading">
+        <h2 class="main-title">Glimpses of Our Journeys</h2>
+        <p class="subtitle">
+            For the past 20 years, we have been organizing trips to every corner of India. These moments spent with our customers are invaluable to us.
+        </p>
+        <p style="color: #ff6600; font-weight: bold; margin-top: 12px; font-size: 0.95rem;">
+            <i class="fas fa-star"></i> 5000+ Satisfied Travelers | 200+ Successful Trips
+        </p>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <h3 class="filter-title"><i class="fas fa-filter"></i> Filter Gallery</h3>
+        <div class="filter-buttons">
+            <button class="pathan-filter-btn active" onclick="filterGallery('all')">
+                <i class="fas fa-globe"></i> All Photos
+            </button>
+            <button class="pathan-filter-btn" onclick="filterGallery('family')">
+                <i class="fas fa-users"></i> Family Tour
+            </button>
+            <button class="pathan-filter-btn" onclick="filterGallery('honeymoon')">
+                <i class="fas fa-heart"></i> Honeymoon
+            </button>
+            <button class="pathan-filter-btn" onclick="filterGallery('adventure')">
+                <i class="fas fa-hiking"></i> Adventure
+            </button>
+            <button class="pathan-filter-btn" onclick="filterGallery('religious')">
+                <i class="fas fa-place-of-worship"></i> Religious Trip
+            </button>
+            <button class="pathan-filter-btn" onclick="filterGallery('international')">
+                <i class="fas fa-plane"></i> International
+            </button>
+        </div>
+    </section>
+
+    <!-- Gallery Grid -->
+    <section class="gallery-container">
+        <div class="gallery-grid" id="galleryGrid">
+            <!-- Photos will load here -->
+        </div>
+    </section>
+
+    <!-- Highlight Section -->
+    <section class="highlight-section">
+        <h2 class="section-title">Pathan Travels Achievements</h2>
+        <div class="highlight-grid">
+            <div class="highlight-card">
+                <div class="highlight-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="highlight-number">5000+</div>
+                <div class="highlight-text">Satisfied Travelers</div>
+            </div>
+            <div class="highlight-card">
+                <div class="highlight-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div class="highlight-number">200+</div>
+                <div class="highlight-text">Successful Trips</div>
+            </div>
+            <div class="highlight-card">
+                <div class="highlight-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="highlight-number">20+</div>
+                <div class="highlight-text">Years of Experience</div>
+            </div>
+            <div class="highlight-card">
+                <div class="highlight-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="highlight-number">50+</div>
+                <div class="highlight-text">Destinations</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pathan-footer">
+        <div class="footer-top">
+            <div class="footer-section">
+                <h3>Pathan Travels</h3>
+                <p>Leading in travel services since 2003. Reliability, safety, and comfort are our priorities.</p>
+                <p style="color: #ffcc66; margin-top: 12px; font-size: 0.9rem;">
+                    <i class="fas fa-award"></i> "Best Travel Agency 2023" Award Winner
+                </p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <div class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    <span>+91 98765 43210</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    <span>+91 98765 43211</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    <span>info@pathantravels.com</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Main Office: Karol Bagh, New Delhi</span>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Upcoming Trips</h3>
+                <p><i class="fas fa-plane-departure"></i> Ladakh - 15 June 2024</p>
+                <p><i class="fas fa-plane-departure"></i> Kerala - 5 July 2024</p>
+                <p><i class="fas fa-plane-departure"></i> Goa - 20 August 2024</p>
+                <p><i class="fas fa-plane-departure"></i> Dubai - 10 September 2024</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2003-2024 पठान ट्रैवल्स. All Rights Reserved. | GST No: 07AAECP1234R1Z1</p>
+            <p style="margin-top: 8px; font-size: 0.8rem;">Website Design & Development: Pathan Travels Tech Team</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div class="pathan-modal" id="imageModal">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        // Pathan Travels Real Gallery Data
+        const galleryData = [{
+            id: 1,
+            src: "https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "Ladakh Family Tour",
+            location: "Leh, Ladakh",
+            date: "May 2023",
+            category: "family",
+            badge: "Bestseller"
+        }, {
+            id: 2,
+            src: "https://images.unsplash.com/photo-1519692933481-e162a57d6721?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "Kashmir Honeymoon Package",
+            location: "Srinagar, Kashmir",
+            date: "April 2023",
+            category: "honeymoon",
+            badge: "Romantic"
+        }, {
+            id: 3,
+            src: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "River Rafting Adventure",
+            location: "Rishikesh, Uttarakhand",
+            date: "March 2023",
+            category: "adventure",
+            badge: "Adventure"
+        }, {
+            id: 4,
+            src: "https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "Vaishno Devi Yatra",
+            location: "Jammu",
+            date: "February 2023",
+            category: "religious",
+            badge: "Religious"
+        }, {
+            id: 5,
+            src: "https://images.unsplash.com/photo-1518684079-3c830dcef090?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "Dubai Shopping Tour",
+            location: "Dubai, UAE",
+            date: "January 2023",
+            category: "international",
+            badge: "International"
+        }, {
+            id: 6,
+            src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "Himachal Family Tour",
+            location: "Manali, Himachal",
+            date: "December 2022",
+            category: "family",
+            badge: "Family"
+        }, {
+            id: 7,
+            src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "Goa Beach Tour",
+            location: "Goa",
+            date: "November 2022",
+            category: "honeymoon",
+            badge: "Honeymoon"
+        }, {
+            id: 8,
+            src: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "Mountaineering Camp",
+            location: "Nainital",
+            date: "October 2022",
+            category: "adventure",
+            badge: "Adventure"
+        }, {
+            id: 9,
+            src: "https://images.unsplash.com/photo-1548013146-72479768bada?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "Haridwar Yatra",
+            location: "Haridwar",
+            date: "September 2022",
+            category: "religious",
+            badge: "Religious"
+        }, {
+            id: 10,
+            src: "https://images.unsplash.com/photo-1516496636080-14fb876e029d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "Singapore Tour",
+            location: "Singapore",
+            date: "August 2022",
+            category: "international",
+            badge: "International"
+        }, {
+            id: 11,
+            src: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "Kerala Backwater Tour",
+            location: "Kerala",
+            date: "July 2022",
+            category: "family",
+            badge: "Family"
+        }, {
+            id: 12,
+            src: "https://images.unsplash.com/photo-1519046904884-53103b34b206?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            title: "Andaman Honeymoon",
+            location: "Andaman & Nicobar",
+            date: "June 2022",
+            category: "honeymoon",
+            badge: "Honeymoon"
+        }];
+
+        // Initialize Gallery
+        function initializeGallery() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            galleryGrid.innerHTML = '';
+
+            galleryData.forEach(item => {
+                const galleryCard = document.createElement('div');
+                galleryCard.className = 'gallery-card';
+                galleryCard.setAttribute('data-category', item.category);
+                galleryCard.innerHTML = `
+                    <div class="card-badge">${item.badge}</div>
+                    <img src="${item.src}" alt="${item.title}" class="card-image" 
+                         onclick="openModal('${item.src}', '${item.title}')">
+                    <div class="card-content">
+                        <h3 class="card-title">${item.title}</h3>
+                        <div class="card-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${item.location}
+                        </div>
+                        <div class="card-date">
+                            <i class="far fa-calendar-alt"></i>
+                            ${item.date}
+                        </div>
+                    </div>
+                `;
+                galleryGrid.appendChild(galleryCard);
+            });
+        }
+
+        // Filter Function
+        function filterGallery(category) {
+            const items = document.querySelectorAll('.gallery-card');
+            const buttons = document.querySelectorAll('.pathan-filter-btn');
+
+            // Update active button
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes(
+                        category === 'all' ? 'All' :
+                        category === 'family' ? 'Family' :
+                        category === 'honeymoon' ? 'Honeymoon' :
+                        category === 'adventure' ? 'Adventure' :
+                        category === 'religious' ? 'Religious' : 'International'
+                    )) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Filter items
+            items.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-category') === category) {
+                    item.style.display = 'block';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
+                    }, 100);
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Modal Functions
+        function openModal(imageSrc, title) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = imageSrc;
+            modalImage.alt = title;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Initialize gallery on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeGallery();
+
+            // Add animation
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.gallery-card');
+                cards.forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(15px)';
+                    card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 80);
+                });
+            }, 300);
+
+            // Touch device improvements
+            if ('ontouchstart' in window) {
+                document.body.classList.add('touch-device');
+            }
+        });
+    </script>
+</body>
+
+</html>

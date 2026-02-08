@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Checkout</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+    <h2>Pay Advance ₹{{ booking.advance_paid }}</h2>
+    <button id="pay-button">Pay Now</button>
+
+    <form id="payment-form" method="POST" action="{% url 'payment_success' %}">
+        {% csrf_token %}
+        <input type="hidden" name="booking_id" value="{{ booking.id }}">
+        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+        <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+    </form>
+
+    <script>
+        var options = {
+            "key": "{{ razorpay_key_id }}",
+            "amount": "{{ order.amount }}",
+            "currency": "INR",
+            "name": "Pathan Travels",
+            "description": "Booking Advance",
+            "order_id": "{{ order.id }}",
+            "handler": function(response) {
+                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                document.getElementById('payment-form').submit();
+            },
+            "theme": {
+                "color": "#0A6EBF"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        document.getElementById('pay-button').onclick = function(e) {
+            rzp1.open();
+            e.preventDefault();
+        }
+    </script>
+</body>
+
+</html>

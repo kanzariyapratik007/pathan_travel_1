@@ -1,0 +1,496 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center text-white py-5 mb-5" style="
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+    margin-top: 20px;
+">
+    <div class="container py-5">
+        <h1 class="display-4 fw-bold mb-3">Explore India With Pathan Tours</h1>
+        <p class="lead mb-4">Premium One-Way & Round Trip Services Across All India</p>
+        <a href="{% url 'book_trip' %}" class="btn btn-success btn-lg px-4 py-2">
+            <i class="fas fa-calendar-check me-2"></i>Book Your Journey Now
+        </a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<div class="row mb-5">
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card h-100 text-center border-0 shadow">
+            <div class="card-body p-4">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-rupee-sign fa-3x text-success"></i>
+                </div>
+                <h4 class="card-title">Best Price Guarantee</h4>
+                <p class="card-text">Get the most competitive rates for all destinations with no hidden charges.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card h-100 text-center border-0 shadow">
+            <div class="card-body p-4">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-car fa-3x text-success"></i>
+                </div>
+                <h4 class="card-title">24/7 Service</h4>
+                <p class="card-text">Available round the clock for your travel needs, any time, any day.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card h-100 text-center border-0 shadow">
+            <div class="card-body p-4">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-shield-alt fa-3x text-success"></i>
+                </div>
+                <h4 class="card-title">Safe & Reliable</h4>
+                <p class="card-text">Experienced drivers and well-maintained vehicles for a secure journey.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popular Destinations -->
+<section class="mb-5">
+    <h2 class="text-center mb-4 fw-bold text-success">Popular Destinations</h2>
+    <div class="row">
+        <div class="col-md-3 col-6 mb-4">
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid rounded" alt="Amritsar">
+                <div class="destination-overlay text-white p-3">
+                    <h5>Amritsar</h5>
+                    <p>Golden Temple & Wagah Border</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid rounded" alt="Manali">
+                <div class="destination-overlay text-white p-3">
+                    <h5>Manali</h5>
+                    <p>Hill Station & Adventure</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid rounded" alt="Shimla">
+                <div class="destination-overlay text-white p-3">
+                    <h5>Shimla</h5>
+                    <p>Queen of Hills</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1585506936724-fa0c19c7b3c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid rounded" alt="Chandigarh">
+                <div class="destination-overlay text-white p-3">
+                    <h5>Chandigarh</h5>
+                    <p>The City Beautiful</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<div class="cta-section bg-success text-white p-5 rounded mb-5 text-center">
+    <h2 class="mb-3">Ready for Your Next Adventure?</h2>
+    <p class="mb-4">Book your trip today and get 10% off on your first booking!</p>
+    <div class="d-flex justify-content-center flex-wrap gap-3">
+        <a href="tel:9879230065" class="btn btn-light btn-lg">
+            <i class="fas fa-phone me-2"></i>Call: 9879230065
+        </a>
+        <a href="https://wa.me/919879230065?text=Hi%20Pathan%20Tours,%20I%20want%20to%20book%20a%20trip" class="btn btn-outline-light btn-lg" target="_blank">
+            <i class="fab fa-whatsapp me-2"></i>WhatsApp Now
+        </a>
+        <a href="{% url 'book_trip' %}" class="btn btn-warning btn-lg">
+            <i class="fas fa-book me-2"></i>Book Online
+        </a>
+    </div>
+</div>
+
+<!-- Testimonials -->
+<section class="mb-5">
+    <h2 class="text-center mb-4 fw-bold text-success">What Our Customers Say</h2>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card testimonial-card h-100 shadow">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="avatar-circle bg-success text-white me-3">R</div>
+                        <div>
+                            <h5 class="mb-0">Rahul Sharma</h5>
+                            <small class="text-muted">Delhi to Amritsar Trip</small>
+                        </div>
+                    </div>
+                    <p class="card-text">"Excellent service! The driver was punctual and the car was very clean. Highly recommended for long journeys."</p>
+                    <div class="text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card testimonial-card h-100 shadow">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="avatar-circle bg-success text-white me-3">P</div>
+                        <div>
+                            <h5 class="mb-0">Priya Verma</h5>
+                            <small class="text-muted">Chandigarh to Manali</small>
+                        </div>
+                    </div>
+                    <p class="card-text">"Safe and comfortable journey with Pathan Tours. They provided a very experienced driver for the hilly roads."</p>
+                    <div class="text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card testimonial-card h-100 shadow">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="avatar-circle bg-success text-white me-3">A</div>
+                        <div>
+                            <h5 class="mb-0">Amit Singh</h5>
+                            <small class="text-muted">Airport Drop Service</small>
+                        </div>
+                    </div>
+                    <p class="card-text">"Reliable and on-time service for my airport transfer. Good communication and reasonable pricing."</p>
+                    <div class="text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<div class="row mb-5">
+    <div class="col-md-6 mb-4">
+        <div class="card border-success h-100">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="fas fa-route me-2"></i>Our Services</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex align-items-center">
+                        <i class="fas fa-check-circle text-success me-3"></i>
+                        <span>One-Way & Round Trips Across India</span>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center">
+                        <i class="fas fa-check-circle text-success me-3"></i>
+                        <span>Airport Pickup & Drop Services</span>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center">
+                        <i class="fas fa-check-circle text-success me-3"></i>
+                        <span>Outstation Taxi Services</span>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center">
+                        <i class="fas fa-check-circle text-success me-3"></i>
+                        <span>Corporate Travel Solutions</span>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center">
+                        <i class="fas fa-check-circle text-success me-3"></i>
+                        <span>Wedding & Event Transportation</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card border-success h-100">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="fas fa-phone-alt me-2"></i>Contact Us</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h5><i class="fas fa-phone text-success me-2"></i>Call Us 24/7</h5>
+                    <p class="fs-5">9879230065 | 9925993770</p>
+                </div>
+                <div class="mb-3">
+                    <h5><i class="fas fa-envelope text-success me-2"></i>Email</h5>
+                    <p>pathanashif124@gmail.com</p>
+                </div>
+                <div class="mb-3">
+                    <h5><i class="fas fa-map-marker-alt text-success me-2"></i>Service Areas</h5>
+                    <p>All Across India - Delhi, Punjab, Himachal, Uttarakhand, Rajasthan & More</p>
+                </div>
+                <div class="d-grid">
+                    <a href="/contact/" class="btn btn-success">
+                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Action Buttons - WhatsApp & Call -->
+<div class="floating-buttons">
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/919879230065?text=Hi%20Pathan%20Tours,%20I%20want%20to%20book%20a%20trip%20or%20inquire%20about%20your%20services" class="floating-btn whatsapp-btn" target="_blank" title="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="btn-tooltip">Chat Now</span>
+    </a>
+
+    <!-- Call Button -->
+    <a href="tel:9879230065" class="floating-btn call-btn" title="Call Now">
+        <i class="fas fa-phone"></i>
+        <span class="btn-tooltip">Call Now</span>
+    </a>
+
+    <!-- Optional: Booking Button -->
+    <a href="{% url 'book_trip' %}" class="floating-btn booking-btn" title="Book a Trip">
+        <i class="fas fa-calendar-check"></i>
+        <span class="btn-tooltip">Book Trip</span>
+    </a>
+</div>
+
+<!-- Add Font Awesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    .hero-section {
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .feature-card {
+        transition: transform 0.3s;
+        border-top: 4px solid #198754;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .feature-icon {
+        color: #198754;
+    }
+    
+    .destination-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        height: 200px;
+    }
+    
+    .destination-card img {
+        transition: transform 0.5s;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+    
+    .destination-card:hover img {
+        transform: scale(1.1);
+    }
+    
+    .destination-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 0 0 10px 10px;
+    }
+    
+    .cta-section {
+        background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+    }
+    
+    .testimonial-card {
+        border-top: 3px solid #198754;
+    }
+    
+    .avatar-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    /* Floating Buttons Styles */
+    
+    .floating-buttons {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .floating-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .floating-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+    
+    .floating-btn:hover .btn-tooltip {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .whatsapp-btn {
+        background-color: #25D366;
+        animation: pulse-green 2s infinite;
+    }
+    
+    .call-btn {
+        background-color: #198754;
+        animation: pulse-green 2s infinite 0.5s;
+    }
+    
+    .booking-btn {
+        background-color: #FFC107;
+        color: #212529;
+        animation: pulse-yellow 2s infinite 1s;
+    }
+    
+    .btn-tooltip {
+        position: absolute;
+        right: 70px;
+        background-color: #333;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        white-space: nowrap;
+        opacity: 0;
+        transform: translateX(10px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .btn-tooltip:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: -5px;
+        transform: translateY(-50%);
+        border-width: 5px 0 5px 5px;
+        border-style: solid;
+        border-color: transparent transparent transparent #333;
+    }
+    /* Pulsing Animation */
+    
+    @keyframes pulse-green {
+        0% {
+            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+        }
+    }
+    
+    @keyframes pulse-yellow {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 15px rgba(255, 193, 7, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+        }
+    }
+    /* Mobile Responsive */
+    
+    @media (max-width: 768px) {
+        .floating-buttons {
+            bottom: 20px;
+            right: 20px;
+        }
+        .floating-btn {
+            width: 55px;
+            height: 55px;
+            font-size: 22px;
+        }
+        .btn-tooltip {
+            font-size: 12px;
+            padding: 5px 10px;
+            right: 65px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .floating-buttons {
+            bottom: 15px;
+            right: 15px;
+            gap: 12px;
+        }
+        .floating-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+        }
+    }
+</style>
+
+<script>
+    // Optional: Add click tracking or additional functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // WhatsApp button click
+        document.querySelector('.whatsapp-btn').addEventListener('click', function() {
+            // You can add analytics or tracking here
+            console.log('WhatsApp button clicked');
+        });
+
+        // Call button click
+        document.querySelector('.call-btn').addEventListener('click', function() {
+            // You can add analytics or tracking here
+            console.log('Call button clicked');
+        });
+
+        // Booking button click
+        document.querySelector('.booking-btn').addEventListener('click', function() {
+            // You can add analytics or tracking here
+            console.log('Booking button clicked');
+        });
+    });
+</script>
+{% endblock %}
