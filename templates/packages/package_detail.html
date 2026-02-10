@@ -1,3 +1,4 @@
+<!-- templates/packages/package_detail.html -->
 {% extends 'base.html' %} {% load static %} {% block content %}
 <div class="container py-5">
     <!-- Package Details -->
@@ -11,6 +12,23 @@
                         <span class="badge bg-info">{{ package.get_vehicle_type_display }}</span> {% if package.is_festival_rate %}
                         <span class="badge bg-warning">Festival Rate</span> {% endif %}
                     </div>
+
+                    <!-- ✅ SCHEDULE DISPLAY -->
+                    {% if package.scheduled_date %}
+                    <div class="alert alert-info mb-4">
+                        <h5><i class="fas fa-calendar-check me-2"></i> Scheduled Trip</h5>
+                        <p class="mb-0">
+                            <strong>Date:</strong> {{ package.scheduled_date }}<br>
+                            <strong>Time:</strong> {{ package.formatted_scheduled_time }}
+                        </p>
+                        <small class="text-muted">Date and time are set by admin and cannot be changed.</small>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning mb-4">
+                        <h5><i class="fas fa-clock me-2"></i> Schedule Not Set</h5>
+                        <p class="mb-0">This package schedule will be confirmed by admin after booking.</p>
+                    </div>
+                    {% endif %}
 
                     <h4 class="text-success mb-4">
                         <i class="fas fa-rupee-sign"></i> {{ package.final_price }}
@@ -86,16 +104,7 @@
                             <input type="email" class="form-control" name="customer_email">
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Travel Date *</label>
-                                <input type="date" class="form-control" name="travel_date" min="{{ today|date:'Y-m-d' }}" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Travel Time *</label>
-                                <input type="time" class="form-control" name="travel_time" required>
-                            </div>
-                        </div>
+                        <!-- ✅ NO DATE/TIME INPUTS FOR CUSTOMER -->
 
                         <div class="mb-3">
                             <label class="form-label">Number of Passengers *</label>
@@ -106,6 +115,16 @@
                             <label class="form-label">Special Requirements</label>
                             <textarea class="form-control" name="special_requirements" rows="3" placeholder="Any special requests..."></textarea>
                         </div>
+
+                        <!-- ✅ SCHEDULE INFORMATION -->
+                        {% if package.scheduled_date %}
+                        <div class="alert alert-success">
+                            <h6><i class="fas fa-info-circle me-2"></i> Trip Schedule (Set by Admin)</h6>
+                            <p class="mb-1"><strong>Date:</strong> {{ package.scheduled_date }}</p>
+                            <p class="mb-0"><strong>Time:</strong> {{ package.formatted_scheduled_time }}</p>
+                            <small class="text-muted">This schedule applies to all bookings for this package.</small>
+                        </div>
+                        {% endif %}
 
                         <div class="alert alert-info">
                             <h6><i class="fas fa-info-circle me-2"></i> Payment Information</h6>

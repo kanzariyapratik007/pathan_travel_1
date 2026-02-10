@@ -1,4 +1,5 @@
-# packages/views.py
+# packages/views.py - COMPLETE FIXED VERSION
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.contrib import messages
@@ -6,21 +7,27 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.utils import timezone
-
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Package, PackageBooking
+from .utils import generate_package_bookings_pdf, send_package_whatsapp_message
 import razorpay
 import os
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from twilio.rest import Client
 
+# Initialize Razorpay client
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
+
+# ============ PUBLIC VIEWS ============
 def package_list(request):
+    """Display all active packages"""
     packages = Package.objects.filter(is_active=True)
     return render(request, 'packages/package_list.html', {'packages': packages})
 
+
 def package_detail(request, package_id):
+    """Display package details and booking form"""
     package = get_object_or_404(Package, id=package_id, is_active=True)
     
     if request.method == "POST":
@@ -28,8 +35,6 @@ def package_detail(request, package_id):
             customer_name = request.POST.get('customer_name')
             customer_phone = request.POST.get('customer_phone')
             customer_email = request.POST.get('customer_email', '')
-            travel_date = request.POST.get('travel_date')
-            travel_time = request.POST.get('travel_time')
             passengers_count = int(request.POST.get('passengers_count', 1))
             special_requirements = request.POST.get('special_requirements', '')
             
@@ -39,8 +44,6 @@ def package_detail(request, package_id):
                 customer_name=customer_name,
                 customer_phone=customer_phone,
                 customer_email=customer_email if customer_email else None,
-                travel_date=travel_date,
-                travel_time=travel_time,
                 passengers_count=passengers_count,
                 special_requirements=special_requirements,
                 total_amount=package.final_price,
@@ -53,13 +56,13 @@ def package_detail(request, package_id):
             messages.error(request, f"Error: {str(e)}")
             return redirect('package_detail', package_id=package_id)
     
-    today = timezone.now().date()
     return render(request, 'packages/package_detail.html', {
         'package': package,
-        'today': today,
     })
 
+
 def package_payment(request, booking_id):
+    """Payment page for package booking"""
     booking = get_object_or_404(PackageBooking, id=booking_id)
     
     try:
@@ -90,8 +93,10 @@ def package_payment(request, booking_id):
         messages.error(request, f"Payment error: {str(e)}")
         return redirect('package_detail', package_id=booking.package.id)
 
+
 @csrf_exempt
 def package_payment_success(request):
+    """Handle successful payment"""
     if request.method == "POST":
         try:
             razorpay_payment_id = request.POST.get('razorpay_payment_id')
@@ -113,12 +118,11 @@ def package_payment_success(request):
             booking.payment_status = 'ADVANCE_PAID'
             booking.save()
             
-            # Send WhatsApp message
+            # Send WhatsApp message (using utils function)
             send_package_whatsapp_message(booking)
             
             # Send email confirmation
-            if booking.customer_email:
-                send_package_confirmation_email(booking)
+            send_package_confirmation_email(booking)
             
             messages.success(request, "Payment successful! Package booking confirmed.")
             return redirect('package_booking_confirmation', booking_id=booking.id)
@@ -129,11 +133,15 @@ def package_payment_success(request):
     
     return redirect('package_list')
 
+
 def package_booking_confirmation(request, booking_id):
+    """Display booking confirmation page"""
     booking = get_object_or_404(PackageBooking, id=booking_id)
     return render(request, 'packages/confirmation.html', {'booking': booking})
 
-def package_invoice(request, booking_id):  # Fixed function name
+
+def package_invoice(request, booking_id):
+    """Download package booking invoice"""
     booking = get_object_or_404(PackageBooking, id=booking_id)
     pdf_path = create_package_invoice_pdf(booking)
     
@@ -142,54 +150,25 @@ def package_invoice(request, booking_id):  # Fixed function name
         response['Content-Disposition'] = f'attachment; filename="Package_Invoice_{booking.invoice_no}.pdf"'
         return response
 
-# Utility functions
-def send_package_whatsapp_message(booking):
-    try:
-        client = Client(
-            settings.TWILIO_ACCOUNT_SID,
-            settings.TWILIO_AUTH_TOKEN
-        )
-        
-        package = booking.package
-        
-        msg = (
-            f"Hello {booking.customer_name} 👋\n\n"
-            f"✨ **Package Booking Confirmed!** ✨\n\n"
-            f"📦 Package: {package.name}\n"
-            f"📋 Booking ID: {booking.invoice_no}\n"
-            f"📍 Route: {package.pickup_location} → {package.drop_location}\n"
-            f"📏 Distance: {package.distance_km} KM\n"
-            f"⏳ Duration: {package.duration_days} Day(s)\n"
-            f"🚗 Vehicle: {package.get_vehicle_type_display()}\n"
-            f"👥 Passengers: {booking.passengers_count}\n"
-            f"🗓 Travel Date: {booking.travel_date}\n"
-            f"⏰ Travel Time: {booking.travel_time.strftime('%I:%M %p')}\n\n"
-            f"💰 Total Fare: ₹{booking.total_amount}\n"
-            f"💵 Advance Paid: ₹{booking.advance_paid}\n"
-            f"💳 Remaining: ₹{booking.remaining_amount}\n\n"
-            f"✅ **Package Inclusions:**\n"
-            f"{package.inclusions}\n\n"
-            f"📝 **Important Notes:**\n"
-            f"{package.important_notes}\n\n"
-            f"Thank you for choosing Pathan Travels! 🚗\n"
-            f"Need help? Call: 9879230065"
-        )
-        
-        client.messages.create(
-            from_=settings.TWILIO_WHATSAPP_NUMBER,
-            to=f"whatsapp:+91{booking.customer_phone}",
-            body=msg
-        )
-        return True
-    except Exception as e:
-        print(f"WhatsApp error: {e}")
-        return False
 
+# ============ UTILITY FUNCTIONS ============
 def send_package_confirmation_email(booking):
+    """Send email confirmation for package booking"""
     try:
+        if not booking.customer_email:
+            return False
+            
         package = booking.package
         
         subject = f"Package Booking Confirmed - {booking.invoice_no}"
+        
+        # ✅ FIXED: Use scheduled_date and scheduled_time
+        scheduled_date = booking.scheduled_date if booking.scheduled_date else "Will be confirmed by admin"
+        
+        if booking.scheduled_time:
+            scheduled_time = booking.scheduled_time.strftime('%I:%M %p')
+        else:
+            scheduled_time = "Will be confirmed by admin"
         
         message = f"""
 Dear {booking.customer_name},
@@ -204,8 +183,8 @@ Distance: {package.distance_km} KM
 Duration: {package.duration_days} Day(s)
 Vehicle: {package.get_vehicle_type_display()}
 Passengers: {booking.passengers_count}
-Travel Date: {booking.travel_date}
-Travel Time: {booking.travel_time.strftime('%I:%M %p')}
+Scheduled Date: {scheduled_date}
+Scheduled Time: {scheduled_time}
 
 **Payment Summary:**
 Total Fare: ₹{booking.total_amount}
@@ -237,96 +216,27 @@ Pathan Tours Team
             fail_silently=True,
         )
         return True
-    except:
+    except Exception as e:
+        print(f"Email error: {e}")
         return False
 
+
 def create_package_invoice_pdf(booking):
-    invoice_dir = os.path.join(settings.MEDIA_ROOT, "invoices/packages")
-    os.makedirs(invoice_dir, exist_ok=True)
-    
-    file_path = os.path.join(invoice_dir, f"package_invoice_{booking.id}.pdf")
-    
-    p = canvas.Canvas(file_path, pagesize=A4)
-    width, height = A4
-    y = height - 50
-    
-    # Header
-    p.setFont("Helvetica-Bold", 18)
-    p.drawCentredString(width/2, y, "PATHAN TOURS - PACKAGE INVOICE")
-    y -= 40
-    
-    # Invoice Details
-    p.setFont("Helvetica", 11)
-    p.drawString(50, y, f"Invoice No: {booking.invoice_no}")
-    p.drawString(350, y, f"Date: {booking.created_at.strftime('%d-%m-%Y %I:%M %p')}")
-    y -= 25
-    
-    # Customer Details
-    p.drawString(50, y, f"Customer: {booking.customer_name}")
-    y -= 20
-    p.drawString(50, y, f"Phone: {booking.customer_phone}")
-    if booking.customer_email:
-        y -= 20
-        p.drawString(50, y, f"Email: {booking.customer_email}")
-    y -= 20
-    
-    # Package Details
-    package = booking.package
-    p.setFont("Helvetica-Bold", 12)
-    p.drawString(50, y, "Package Details")
-    y -= 25
-    
-    p.setFont("Helvetica", 11)
-    p.drawString(50, y, f"Package: {package.name}")
-    y -= 20
-    p.drawString(50, y, f"Route: {package.pickup_location} → {package.drop_location}")
-    y -= 20
-    p.drawString(50, y, f"Distance: {package.distance_km} KM")
-    y -= 20
-    p.drawString(50, y, f"Duration: {package.duration_days} Day(s)")
-    y -= 20
-    p.drawString(50, y, f"Vehicle: {package.get_vehicle_type_display()}")
-    y -= 20
-    p.drawString(50, y, f"Passengers: {booking.passengers_count}")
-    y -= 20
-    p.drawString(50, y, f"Travel Date: {booking.travel_date}")
-    y -= 20
-    p.drawString(50, y, f"Travel Time: {booking.travel_time.strftime('%I:%M %p')}")
-    
-    # Payment Details
-    y -= 20
-    p.setFont("Helvetica-Bold", 12)
-    p.drawString(50, y, "Payment Summary")
-    y -= 25
-    
-    p.setFont("Helvetica", 11)
-    p.drawString(50, y, f"Total Package Fare: ₹{booking.total_amount}")
-    y -= 20
-    p.drawString(50, y, f"Advance Paid: ₹{booking.advance_paid}")
-    y -= 20
-    p.drawString(50, y, f"Remaining Amount: ₹{booking.remaining_amount}")
-    
-    p.showPage()
-    p.save()
-    
-    return file_path
+    """Create PDF invoice for package booking"""
+    from .utils import create_package_invoice_pdf as create_pdf
+    return create_pdf(booking)
 
-# packages/views.py માં નીચેના imports ઉમેરો
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render
-from .models import PackageBooking
-from .utils import generate_package_bookings_pdf
-import json
 
-# Admin check function
+# ============ ADMIN VIEWS ============
 def is_admin_user(user):
+    """Check if user is admin"""
     return user.is_authenticated and user.is_staff
+
 
 @login_required
 @user_passes_test(is_admin_user)
 def admin_package_bookings_pdf(request):
-    """Admin માટે package bookings ની PDF"""
+    """Generate PDF report for package bookings (Admin only)"""
     # Get filter parameters
     status_filter = request.GET.get('status', '')
     date_from = request.GET.get('date_from', '')
@@ -355,7 +265,8 @@ def admin_package_bookings_pdf(request):
     # Generate title
     title = "Package Bookings Report"
     if status_filter:
-        title += f" - Status: {dict(PackageBooking.STATUS_CHOICES).get(status_filter, status_filter)}"
+        status_name = dict(PackageBooking.STATUS_CHOICES).get(status_filter, status_filter)
+        title += f" - Status: {status_name}"
     if date_from and date_to:
         title += f" - From {date_from} to {date_to}"
     
@@ -368,12 +279,11 @@ def admin_package_bookings_pdf(request):
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
 
+
 @login_required
 @user_passes_test(is_admin_user)
 def admin_package_bookings_report(request):
-    """Admin report page"""
-    from .models import Package
-    
+    """Admin report page for package bookings"""
     # Get all packages for filter
     packages = Package.objects.all()
     

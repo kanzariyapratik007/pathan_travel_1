@@ -1,38 +1,201 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
+
 <div class="container py-5">
-    <h1 class="text-center mb-5">🎒 Our Tour Packages</h1>
+    <!-- Hero Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold mb-3">🎒 Discover Amazing Tour Packages</h1>
+        <p class="lead text-muted">Explore breathtaking destinations with our expertly curated travel experiences</p>
 
-    <div class="row">
+        <!-- Optional: Filter Tabs -->
+        <div class="d-flex flex-wrap justify-content-center gap-2 mt-4">
+            <a href="?type=all" class="btn btn-outline-success">All Packages</a>
+            <a href="?type=adventure" class="btn btn-outline-success">Adventure</a>
+            <a href="?type=family" class="btn btn-outline-success">Family</a>
+            <a href="?type=luxury" class="btn btn-outline-success">Luxury</a>
+            <a href="?type=budget" class="btn btn-outline-success">Budget</a>
+        </div>
+    </div>
+
+    <!-- Tour Packages Grid -->
+    <div class="row g-4">
         {% for package in packages %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow">
-                {% if package.cover_image %}
-                <img src="{{ package.cover_image.url }}" class="card-img-top" alt="{{ package.name }}" style="height: 200px; object-fit: cover;"> {% else %}
-                <img src="{% static 'images/default-package.jpg' %}" class="card-img-top" alt="Default" style="height: 200px; object-fit: cover;"> {% endif %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all duration-300 overflow-hidden">
+                <!-- Package Image with Badge -->
+                <div class="position-relative">
+                    {% if package.cover_image %}
+                    <img src="{{ package.cover_image.url }}" class="card-img-top" alt="{{ package.name }}" style="height: 220px; object-fit: cover;"> {% else %}
+                    <img src="{% static 'images/default-package.jpg' %}" class="card-img-top" alt="Default Package" style="height: 220px; object-fit: cover;"> {% endif %}
 
-                <div class="card-body">
-                    <span class="badge bg-success mb-2">{{ package.get_package_type_display }}</span>
-                    <h5 class="card-title">{{ package.name }}</h5>
-                    <p class="card-text">
-                        <i class="fas fa-route me-2"></i> {{ package.pickup_location }} → {{ package.drop_location }}<br>
-                        <i class="fas fa-road me-2"></i> {{ package.distance_km }} KM<br>
-                        <i class="fas fa-calendar-alt me-2"></i> {{ package.duration_days }} Day(s)<br>
-                        <i class="fas fa-car me-2"></i> {{ package.get_vehicle_type_display }}
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="text-success mb-0">₹{{ package.final_price }}</h4>
-                        <a href="{% url 'package_detail' package.id %}" class="btn btn-success">Book Now</a>
+                    <!-- Package Type Badge -->
+                    <div class="position-absolute top-0 end-0 m-3">
+                        <span class="badge bg-success bg-opacity-90 px-3 py-2 rounded-pill">
+                            {{ package.get_package_type_display }}
+                        </span>
+                    </div>
+
+                    <!-- Popular Badge (Optional) -->
+                    {% if package.is_popular %}
+                    <div class="position-absolute top-0 start-0 m-3">
+                        <span class="badge bg-warning text-dark px-3 py-2">
+                            <i class="fas fa-star me-1"></i> Popular
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body d-flex flex-column">
+                    <!-- Package Title -->
+                    <h5 class="card-title fw-bold text-truncate">{{ package.name }}</h5>
+
+                    <!-- Route Info -->
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center text-secondary mb-2">
+                            <i class="fas fa-route me-2 text-success"></i>
+                            <div>
+                                <small class="d-block">Route</small>
+                                <span class="fw-medium">{{ package.pickup_location }} → {{ package.drop_location }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Package Details Grid -->
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <div class="bg-light rounded p-2 text-center">
+                                    <i class="fas fa-road text-success mb-1"></i>
+                                    <div>
+                                        <small class="d-block text-muted">Distance</small>
+                                        <span class="fw-semibold">{{ package.distance_km }} KM</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="bg-light rounded p-2 text-center">
+                                    <i class="fas fa-calendar-alt text-success mb-1"></i>
+                                    <div>
+                                        <small class="d-block text-muted">Duration</small>
+                                        <span class="fw-semibold">{{ package.duration_days }} Day(s)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Type -->
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-car text-success me-2"></i>
+                            <small class="text-muted">Vehicle: </small>
+                            <span class="ms-1 fw-medium">{{ package.get_vehicle_type_display }}</span>
+                        </div>
+
+                        <!-- Description Excerpt -->
+                        {% if package.short_description %}
+                        <p class="text-muted small mb-3">
+                            {{ package.short_description|truncatewords:15 }}
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Price and Action Button -->
+                    <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
+                        <div>
+                            {% if package.original_price > package.final_price %}
+                            <div class="text-decoration-line-through text-muted small">
+                                ₹{{ package.original_price }}
+                            </div>
+                            {% endif %}
+                            <h4 class="text-success fw-bold mb-0">
+                                ₹{{ package.final_price }} {% if package.duration_days > 0 %}
+                                <small class="text-muted fs-6 fw-normal">/person</small> {% endif %}
+                            </h4>
+                        </div>
+                        <a href="{% url 'package_detail' package.id %}" class="btn btn-success px-4">
+                            Book Now <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
         {% empty %}
-        <div class="col-12 text-center">
-            <div class="alert alert-info">
-                No packages available at the moment.
+        <!-- Empty State -->
+        <div class="col-12">
+            <div class="text-center py-5">
+                <div class="display-1 text-muted mb-4">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <h3 class="h4 text-muted mb-3">No Tour Packages Available</h3>
+                <p class="text-muted mb-4">We're currently updating our tour offerings. Please check back soon!</p>
+                <a href="{% url 'home' %}" class="btn btn-outline-success">
+                    <i class="fas fa-home me-2"></i> Return Home
+                </a>
             </div>
         </div>
         {% endfor %}
     </div>
+
+    <!-- Optional: Pagination -->
+    {% if packages.has_other_pages %}
+    <div class="d-flex justify-content-center mt-5">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if packages.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ packages.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %} {% for num in packages.paginator.page_range %}
+                <li class="page-item {% if packages.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %} {% if packages.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ packages.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
 </div>
+
+<!-- Add custom CSS for hover effects -->
+<style>
+    .hover-shadow {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+    /* Card border hover effect */
+    
+    .card {
+        border: 1px solid rgba(0, 0, 0, 0.075);
+    }
+    
+    .card:hover {
+        border-color: var(--bs-success);
+    }
+    /* Badge styling */
+    
+    .badge.bg-success {
+        background-color: var(--bs-success) !important;
+    }
+    /* Responsive adjustments */
+    
+    @media (max-width: 768px) {
+        .card-img-top {
+            height: 180px !important;
+        }
+    }
+</style>
+
 {% endblock %}

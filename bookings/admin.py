@@ -136,7 +136,8 @@ class BookingAdmin(admin.ModelAdmin):
         'get_status_display',
         'get_payment_status_display',
         'created_at',
-        'delete_action_column',  # NEW COLUMN
+        'invoice_pdf_button',
+        'delete_action_column',
     )
     
     list_filter = (
@@ -250,6 +251,21 @@ class BookingAdmin(admin.ModelAdmin):
             f'{obj.get_payment_status_display()}</span>'
         )
     get_payment_status_display.short_description = 'Payment'
+    
+    def invoice_pdf_button(self, obj):
+        if not obj.id:
+            return "-"
+        
+        pdf_url = reverse('admin_booking_invoice', args=[obj.id])
+        
+        return format_html(
+            '<a href="{}" target="_blank" class="button" '
+            'style="background:#0d6efd;color:white;padding:3px 8px;'
+            'border-radius:3px;text-decoration:none;font-size:11px;">'
+            '<i class="fas fa-file-pdf"></i> PDF</a>',
+            pdf_url
+        )
+    invoice_pdf_button.short_description = "Invoice"
     
     # ============ NEW METHOD FOR DELETE COLUMN ============
     def delete_action_column(self, obj):

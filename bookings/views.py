@@ -420,3 +420,5 @@ def admin_delete_booking(request, booking_id):
         'title': 'Delete Booking',
     }
     return render(request, 'admin/delete_confirmation.html', context)
+
+

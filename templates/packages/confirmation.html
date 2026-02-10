@@ -85,8 +85,15 @@
                         </div>
                         <div class="card-body">
                             <p><strong>Booking ID:</strong> {{ booking.invoice_no }}</p>
-                            <p><strong>Travel Date:</strong> {{ booking.travel_date }}</p>
-                            <p><strong>Travel Time:</strong> {{ booking.travel_time|time:"h:i A" }}</p>
+
+                            <!-- ✅ CHANGED: Use package schedule instead of booking date/time -->
+                            {% if booking.package.scheduled_date %}
+                            <p><strong>Scheduled Date:</strong> {{ booking.package.scheduled_date }}</p>
+                            <p><strong>Scheduled Time:</strong> {{ booking.package.formatted_scheduled_time }}</p>
+                            {% else %}
+                            <p><strong>Schedule:</strong> <span class="text-warning">Will be confirmed by admin</span></p>
+                            {% endif %}
+
                             <hr>
                             <p><strong>Total Fare:</strong> <span class="text-success">₹{{ booking.total_amount }}</span></p>
                             <p><strong>Advance Paid:</strong> <span class="text-success">₹{{ booking.advance_paid }}</span></p>

@@ -1,11 +1,18 @@
-# packages/utils.py (નવું ફાઈલ બનાવો)
+# packages/utils.py - COMPLETE FIXED VERSION
+
 import os
 from django.conf import settings
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib import colors
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib.units import inch
+from django.utils import timezone
 from twilio.rest import Client
 
+
 def send_package_whatsapp_message(booking):
+    """Send WhatsApp message for package booking confirmation"""
     try:
         client = Client(
             settings.TWILIO_ACCOUNT_SID,
@@ -15,6 +22,14 @@ def send_package_whatsapp_message(booking):
         package = booking.package
         site_url = settings.SITE_URL
         pdf_download_url = f"{site_url}/packages/invoice/{booking.id}/"
+        
+        # ✅ FIXED: Use properties that exist in PackageBooking model
+        scheduled_date = booking.scheduled_date if booking.scheduled_date else "Will be confirmed"
+        
+        if booking.scheduled_time:
+            scheduled_time = booking.scheduled_time.strftime('%I:%M %p')
+        else:
+            scheduled_time = "Will be confirmed"
         
         msg = (
             f"Hello {booking.customer_name} 👋\n\n"
@@ -26,8 +41,8 @@ def send_package_whatsapp_message(booking):
             f"⏳ Duration: {package.duration_days} Day(s)\n"
             f"🚗 Vehicle: {package.get_vehicle_type_display()}\n"
             f"👥 Passengers: {booking.passengers_count}\n"
-            f"🗓 Travel Date: {booking.travel_date}\n"
-            f"⏰ Travel Time: {booking.travel_time.strftime('%I:%M %p')}\n\n"
+            f"🗓 Scheduled Date: {scheduled_date}\n"
+            f"⏰ Scheduled Time: {scheduled_time}\n\n"
             f"💰 Total Fare: ₹{booking.total_amount}\n"
             f"💵 Advance Paid: ₹{booking.advance_paid}\n"
             f"💳 Remaining: ₹{booking.remaining_amount}\n\n"
@@ -53,13 +68,22 @@ def send_package_whatsapp_message(booking):
         send_package_whatsapp_via_url(booking)
         return False
 
+
 def send_package_whatsapp_via_url(booking):
-    """Package booking માટે WhatsApp લિંક"""
+    """Generate WhatsApp URL for package booking"""
     try:
         phone = booking.customer_phone
         package = booking.package
         site_url = settings.SITE_URL
         pdf_download_url = f"{site_url}/packages/invoice/{booking.id}/"
+        
+        # ✅ FIXED: Use properties that exist
+        scheduled_date = booking.scheduled_date if booking.scheduled_date else "Will be confirmed"
+        
+        if booking.scheduled_time:
+            scheduled_time = booking.scheduled_time.strftime('%I:%M %p')
+        else:
+            scheduled_time = "Will be confirmed"
         
         message = (
             f"Hello {booking.customer_name} 👋\n\n"
@@ -71,8 +95,8 @@ def send_package_whatsapp_via_url(booking):
             f"⏳ Duration: {package.duration_days} Day(s)\n"
             f"🚗 Vehicle: {package.get_vehicle_type_display()}\n"
             f"👥 Passengers: {booking.passengers_count}\n"
-            f"🗓 Travel Date: {booking.travel_date}\n"
-            f"⏰ Travel Time: {booking.travel_time.strftime('%I:%M %p')}\n\n"
+            f"🗓 Scheduled Date: {scheduled_date}\n"
+            f"⏰ Scheduled Time: {scheduled_time}\n\n"
             f"💰 Total Fare: ₹{booking.total_amount}\n"
             f"💵 Advance Paid: ₹{booking.advance_paid}\n"
             f"💳 Remaining: ₹{booking.remaining_amount}\n\n"
@@ -86,19 +110,10 @@ def send_package_whatsapp_via_url(booking):
     except Exception as e:
         print(f"Package WhatsApp URL error: {e}")
         return None
-    
-    # packages/utils.py માં નીચેના ફંકશન ઉમેરો
-import os
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4, landscape
-from reportlab.lib import colors
-from reportlab.platypus import Table, TableStyle
-from reportlab.lib.units import inch
-from django.conf import settings
-from django.utils import timezone
+
 
 def generate_package_bookings_pdf(bookings, title="Package Bookings Report"):
-    """Package bookings ની list PDF માં બનાવવી"""
+    """Generate PDF report for package bookings"""
     
     # Create directory if not exists
     pdf_dir = os.path.join(settings.MEDIA_ROOT, "reports")
@@ -136,7 +151,7 @@ def generate_package_bookings_pdf(bookings, title="Package Bookings Report"):
         "Package",
         "Route",
         "Passengers",
-        "Travel Date",
+        "Scheduled Date",  # ✅ CHANGED: Travel Date to Scheduled Date
         "Total Amount",
         "Advance Paid",
         "Remaining",
@@ -146,6 +161,11 @@ def generate_package_bookings_pdf(bookings, title="Package Bookings Report"):
     
     # Add booking data
     for index, booking in enumerate(bookings, 1):
+        # ✅ FIXED: Use scheduled_date instead of travel_date
+        date_str = "Not set"
+        if booking.scheduled_date:
+            date_str = booking.scheduled_date.strftime('%d-%m-%Y')
+        
         row = [
             str(index),
             booking.invoice_no or "N/A",
@@ -154,7 +174,7 @@ def generate_package_bookings_pdf(bookings, title="Package Bookings Report"):
             booking.package.name[:20] + "..." if len(booking.package.name) > 20 else booking.package.name,
             f"{booking.package.pickup_location[:10]}→{booking.package.drop_location[:10]}" if len(booking.package.pickup_location) > 10 else f"{booking.package.pickup_location}→{booking.package.drop_location}",
             str(booking.passengers_count),
-            booking.travel_date.strftime('%d-%m-%Y'),
+            date_str,  # ✅ FIXED: Use scheduled_date
             f"₹{booking.total_amount}",
             f"₹{booking.advance_paid}",
             f"₹{booking.remaining_amount}",
@@ -233,3 +253,84 @@ def generate_package_bookings_pdf(bookings, title="Package Bookings Report"):
     p.save()
     
     return filepath, filename
+
+
+# Additional utility functions
+def create_package_invoice_pdf(booking):
+    """Create PDF invoice for package booking"""
+    invoice_dir = os.path.join(settings.MEDIA_ROOT, "invoices/packages")
+    os.makedirs(invoice_dir, exist_ok=True)
+    
+    file_path = os.path.join(invoice_dir, f"package_invoice_{booking.id}.pdf")
+    
+    p = canvas.Canvas(file_path, pagesize=A4)
+    width, height = A4
+    y = height - 50
+    
+    # Header
+    p.setFont("Helvetica-Bold", 18)
+    p.drawCentredString(width/2, y, "PATHAN TOURS - PACKAGE INVOICE")
+    y -= 40
+    
+    # Invoice Details
+    p.setFont("Helvetica", 11)
+    p.drawString(50, y, f"Invoice No: {booking.invoice_no}")
+    p.drawString(350, y, f"Date: {booking.created_at.strftime('%d-%m-%Y %I:%M %p')}")
+    y -= 25
+    
+    # Customer Details
+    p.drawString(50, y, f"Customer: {booking.customer_name}")
+    y -= 20
+    p.drawString(50, y, f"Phone: {booking.customer_phone}")
+    if booking.customer_email:
+        y -= 20
+        p.drawString(50, y, f"Email: {booking.customer_email}")
+    y -= 20
+    
+    # Package Details
+    package = booking.package
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(50, y, "Package Details")
+    y -= 25
+    
+    p.setFont("Helvetica", 11)
+    p.drawString(50, y, f"Package: {package.name}")
+    y -= 20
+    p.drawString(50, y, f"Route: {package.pickup_location} → {package.drop_location}")
+    y -= 20
+    p.drawString(50, y, f"Distance: {package.distance_km} KM")
+    y -= 20
+    p.drawString(50, y, f"Duration: {package.duration_days} Day(s)")
+    y -= 20
+    p.drawString(50, y, f"Vehicle: {package.get_vehicle_type_display()}")
+    y -= 20
+    p.drawString(50, y, f"Passengers: {booking.passengers_count}")
+    
+    # ✅ FIXED: Use scheduled_date instead of travel_date
+    y -= 20
+    if booking.scheduled_date:
+        p.drawString(50, y, f"Scheduled Date: {booking.scheduled_date}")
+        y -= 20
+        if booking.scheduled_time:
+            p.drawString(50, y, f"Scheduled Time: {booking.scheduled_time.strftime('%I:%M %p')}")
+            y -= 20
+    else:
+        p.drawString(50, y, f"Schedule: Will be confirmed by admin")
+        y -= 20
+    
+    # Payment Details
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(50, y, "Payment Summary")
+    y -= 25
+    
+    p.setFont("Helvetica", 11)
+    p.drawString(50, y, f"Total Package Fare: ₹{booking.total_amount}")
+    y -= 20
+    p.drawString(50, y, f"Advance Paid: ₹{booking.advance_paid}")
+    y -= 20
+    p.drawString(50, y, f"Remaining Amount: ₹{booking.remaining_amount}")
+    
+    p.showPage()
+    p.save()
+    
+    return file_path

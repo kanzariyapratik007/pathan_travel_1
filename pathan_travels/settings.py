@@ -122,3 +122,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py માં આ ઉમેરો:
 RAZORPAY_KEY_ID = 'rzp_test_e664V0FP0zQy7N'  # તમારી key
 RAZORPAY_KEY_SECRET = 'QdnuRxUHrPGeiJc9lDTXYPO7'  # તમારી secret
+
+

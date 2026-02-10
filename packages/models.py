@@ -1,7 +1,11 @@
-from django.db import models
+# packages/models.py - COMPLETE FIXED VERSION
 
-# Create your models here.
 from django.db import models
+from django.utils import timezone
+from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
+from datetime import date
+
 
 class TravelPackage(models.Model):
     title = models.CharField(max_length=200)
@@ -11,11 +15,7 @@ class TravelPackage(models.Model):
 
     def __str__(self):
         return self.title
-# packages/models.py
-# packages/models.py
-from django.db import models
-from django.utils import timezone
-from django.core.validators import MinValueValidator
+
 
 class Package(models.Model):
     PACKAGE_TYPES = [
@@ -28,7 +28,7 @@ class Package(models.Model):
     
     VEHICLE_TYPES = [
         ('SEDAN', 'Sedan (4-Seater)'),
-        ('SUV', 'SUV (6-7 Seater)'),
+        ('ERTIGA', 'ERTIGA (6-7 Seater)'),
         ('TEMPO', 'Tempo Traveler (12 Seater)'),
         ('BUS', 'Mini Bus (20-25 Seater)'),
     ]
@@ -37,6 +37,19 @@ class Package(models.Model):
     name = models.CharField(max_length=200)
     package_type = models.CharField(max_length=20, choices=PACKAGE_TYPES)
     description = models.TextField()
+    
+    # ✅ ADMIN-CONTROLLED DATE/TIME
+    scheduled_date = models.DateField(
+        help_text="Admin will set the travel date. Format: YYYY-MM-DD", 
+        blank=True, 
+        null=True,
+    )
+    
+    scheduled_time = models.TimeField(
+        help_text="Admin will set the travel time. Format: HH:MM (24-hour)", 
+        blank=True, 
+        null=True
+    )
     
     # Route Details
     pickup_location = models.CharField(max_length=200)
@@ -55,7 +68,6 @@ class Package(models.Model):
     
     # Images
     cover_image = models.ImageField(upload_to='packages/', blank=True, null=True)
-    # gallery_images field removed for now
     
     # Inclusions
     inclusions = models.TextField(help_text="Separate with comma")
@@ -81,6 +93,19 @@ class Package(models.Model):
     @property
     def remaining_amount(self):
         return self.final_price - self.advance_amount
+    
+    # ✅ ADD THIS PROPERTY FOR DISPLAY
+    @property
+    def formatted_scheduled_time(self):
+        if self.scheduled_time:
+            return self.scheduled_time.strftime('%I:%M %p')  # 12-hour format
+        return "To be scheduled"
+    
+    # ✅ ADD CUSTOM VALIDATION METHOD
+    def clean(self):
+        super().clean()
+        if self.scheduled_date and self.scheduled_date < date.today():
+            raise ValidationError({'scheduled_date': 'Date must be today or in the future.'})
     
     class Meta:
         ordering = ['-created_at']
@@ -110,10 +135,6 @@ class PackageBooking(models.Model):
     customer_phone = models.CharField(max_length=10)
     customer_email = models.EmailField(blank=True, null=True)
     passengers_count = models.IntegerField(default=1)
-    
-    # Travel Details
-    travel_date = models.DateField()
-    travel_time = models.TimeField()
     
     # Special Requirements
     special_requirements = models.TextField(blank=True)
@@ -163,9 +184,43 @@ class PackageBooking(models.Model):
     def remaining_amount(self):
         return self.total_amount - self.advance_paid
     
-    def __str__(self):
-        return f"{self.invoice_no} - {self.customer_name} - {self.package.name}"
+    # ✅ PROPERTY TO GET SCHEDULE FROM PACKAGE
+    @property
+    def scheduled_date(self):
+        if self.package:
+            return self.package.scheduled_date
+        return None
     
+    @property
+    def scheduled_time(self):
+        if self.package:
+            return self.package.scheduled_time
+        return None
+    
+    # ✅ ADD LEGACY SUPPORT PROPERTIES
+    @property
+    def travel_date(self):
+        """Legacy support - returns scheduled_date"""
+        return self.scheduled_date
+    
+    @property
+    def travel_time(self):
+        """Legacy support - returns scheduled_time"""
+        return self.scheduled_time
+    
+    # ✅ ADD FORMATTED TIME PROPERTY
+    @property
+    def formatted_scheduled_time(self):
+        if self.scheduled_time:
+            return self.scheduled_time.strftime('%I:%M %p')
+        return "To be scheduled"
+    
+    def __str__(self):
+        invoice = self.invoice_no or f"Booking-{self.pk}"
+        customer = self.customer_name or "Unknown Customer"
+        package = self.package.name if self.package else "No Package"
+        return f"{invoice} - {customer} - {package}"
+
     class Meta:
         ordering = ['-created_at']
         verbose_name = 'Package Booking'

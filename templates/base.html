@@ -20,21 +20,209 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     <style>
+        /* Global */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        /* Navbar */
+        
+        .navbar {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: #fff !important;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            letter-spacing: 0.5px;
         }
         
         .navbar-brand img {
-            height: 40px;
-            margin-right: 5px;
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
         }
         
-        .footer {
-            background: #198754;
-            color: white;
-            padding: 40px 0;
-            margin-top: 50px;
+        .navbar-brand:hover img {
+            transform: scale(1.08);
         }
+        /* Nav links */
+        
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9) !important;
+            margin: 0 3px;
+            padding: 10px 18px !important;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 6px;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-1px);
+        }
+        /* Bottom border effect on hover */
+        
+        .navbar-nav .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 5px;
+            width: 0;
+            height: 2px;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .navbar-nav .nav-link:hover::before {
+            width: 70%;
+        }
+        /* Navbar layout */
+        
+        .navbar-collapse {
+            justify-content: space-between;
+        }
+        
+        .navbar-nav.left-nav {
+            margin-right: auto;
+            padding-right: 15px;
+        }
+        
+        .navbar-nav.right-nav {
+            margin-left: auto;
+            padding-left: 15px;
+        }
+        /* Messages Alert Styling */
+        
+        .alert {
+            border: none;
+            border-radius: 10px;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+        }
+        
+        .alert-info {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            color: #0c5460;
+        }
+        
+        .alert-warning {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            color: #856404;
+        }
+        /* Main Content */
+        
+        main {
+            min-height: calc(100vh - 400px);
+        }
+        /* Footer */
+        
+        .footer {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white;
+            padding: 60px 0 25px;
+            margin-top: 80px;
+            box-shadow: 0 -3px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer h5 {
+            font-weight: 700;
+            margin-bottom: 25px;
+            font-size: 1.25rem;
+            position: relative;
+            padding-bottom: 12px;
+            color: #ffffff;
+        }
+        
+        .footer h5::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 45px;
+            height: 3px;
+            background: #fbbf24;
+            border-radius: 2px;
+        }
+        
+        .footer p {
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .footer a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .footer a:hover {
+            color: #fbbf24;
+            padding-left: 5px;
+        }
+        
+        .footer i {
+            color: #fbbf24;
+            width: 20px;
+        }
+        
+        .footer hr {
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 40px 0 25px;
+            height: 1px;
+            opacity: 1;
+        }
+        
+        .footer .text-center p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        /* WhatsApp Floating Button */
         
         .whatsapp-float {
             position: fixed;
@@ -48,16 +236,109 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 30px;
             text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
             z-index: 1000;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .whatsapp-float:hover {
             transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
             color: white;
+            background: #20ba5a;
+        }
+        
+        .whatsapp-float::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #25D366;
+            opacity: 0.3;
+            animation: ripple 1.5s infinite;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(1.4);
+                opacity: 0;
+            }
+        }
+        /* Mobile adjustments */
+        
+        @media (max-width: 992px) {
+            .navbar {
+                padding: 12px 0;
+            }
+            .navbar-brand {
+                position: static;
+                transform: none;
+                font-size: 1.35rem;
+            }
+            .navbar-brand img {
+                height: 42px;
+            }
+            .navbar-nav .nav-link {
+                margin: 5px 0;
+                padding: 12px 15px !important;
+                font-size: 1.05rem;
+            }
+            .navbar-nav .nav-link::before {
+                display: none;
+            }
+            .navbar-collapse {
+                justify-content: flex-start;
+                margin-top: 15px;
+            }
+            .navbar-nav.left-nav,
+            .navbar-nav.right-nav {
+                padding: 0;
+            }
+            .footer {
+                padding: 40px 0 20px;
+                margin-top: 50px;
+            }
+            .footer h5 {
+                font-size: 1.15rem;
+                margin-bottom: 20px;
+            }
+            .whatsapp-float {
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
+                font-size: 26px;
+            }
+        }
+        /* Smooth scroll */
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Custom scrollbar */
+        
+         ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+         ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background: #16a34a;
+            border-radius: 5px;
+        }
+        
+         ::-webkit-scrollbar-thumb:hover {
+            background: #15803d;
         }
     </style>
 
@@ -66,18 +347,23 @@
 
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: #198754;">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center fw-bold" href="/">
-                <img src="{% static 'images/logo.png.png' %}" alt="Pathan Tours Logo"> Pathan Tours
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container position-relative">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
+            <!-- Center Logo -->
+            <a class="navbar-brand d-flex align-items-center fw-bold" href="">
+                <img src="{% static 'images/#pp1.jpeg' %}" alt="">
+                <h4>Pathan Travels</h4>
+
+            </a>
+
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <!-- Left Nav Items -->
+                <ul class="navbar-nav left-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
                     </li>
@@ -87,6 +373,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'book_trip' %}">Book Now</a>
                     </li>
+                </ul>
+
+                <!-- Right Nav Items -->
+                <ul class="navbar-nav right-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="/gallery/">Gallery</a>
                     </li>
@@ -122,11 +412,11 @@
     <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4 mb-4 mb-md-0">
                     <h5>Pathan Tours & Travels</h5>
                     <p>Premium travel services across India. Safe, reliable, and affordable.</p>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mb-4 mb-md-0">
                     <h5>Contact Us</h5>
                     <p><i class="fas fa-phone me-2"></i> 9879230065</p>
                     <p><i class="fas fa-phone me-2"></i> 9925993770</p>
@@ -134,13 +424,13 @@
                 </div>
                 <div class="col-md-4">
                     <h5>Quick Links</h5>
-                    <p><a href="/" class="text-white">Home</a></p>
-                    <p><a href="/packages/" class="text-white">Packages</a></p>
-                    <p><a href="{% url 'book_trip' %}" class="text-white">Book Now</a></p>
-                    <p><a href="{% url 'contact' %}" class="text-white">Contact</a></p>
+                    <p><a href="/">Home</a></p>
+                    <p><a href="/packages/">Packages</a></p>
+                    <p><a href="{% url 'book_trip' %}">Book Now</a></p>
+                    <p><a href="{% url 'contact' %}">Contact</a></p>
                 </div>
             </div>
-            <hr class="bg-white">
+            <hr>
             <div class="text-center">
                 <p>&copy; 2024 Pathan Tours & Travels. All rights reserved.</p>
             </div>
@@ -157,6 +447,18 @@
 
     <!-- Custom JS -->
     {% block extra_js %}{% endblock %}
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
 </body>
 
 </html>

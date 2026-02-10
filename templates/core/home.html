@@ -54,44 +54,28 @@
     </div>
 </div>
 
-<!-- Popular Destinations -->
+<!-- Services Section -->
 <section class="mb-5">
-    <h2 class="text-center mb-4 fw-bold text-success">Popular Destinations</h2>
+    <h2 class="text-center mb-4 fw-bold text-success">Our Services</h2>
     <div class="row">
         <div class="col-md-3 col-6 mb-4">
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid rounded" alt="Amritsar">
-                <div class="destination-overlay text-white p-3">
-                    <h5>Amritsar</h5>
-                    <p>Golden Temple & Wagah Border</p>
-                </div>
+            <div class="service-card">
+                <img src="{% static 'images/im1.jpeg' %}" class="img-fluid rounded" alt="One-Way Trip">
             </div>
         </div>
         <div class="col-md-3 col-6 mb-4">
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid rounded" alt="Manali">
-                <div class="destination-overlay text-white p-3">
-                    <h5>Manali</h5>
-                    <p>Hill Station & Adventure</p>
-                </div>
+            <div class="service-card">
+                <img src="{% static 'images/im2.jpeg' %}" class="img-fluid rounded" alt="Round Trip">
             </div>
         </div>
         <div class="col-md-3 col-6 mb-4">
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid rounded" alt="Shimla">
-                <div class="destination-overlay text-white p-3">
-                    <h5>Shimla</h5>
-                    <p>Queen of Hills</p>
-                </div>
+            <div class="service-card">
+                <img src="{% static 'images/im3.jpeg' %}" class="img-fluid rounded" alt="Airport Service">
             </div>
         </div>
         <div class="col-md-3 col-6 mb-4">
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1585506936724-fa0c19c7b3c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid rounded" alt="Chandigarh">
-                <div class="destination-overlay text-white p-3">
-                    <h5>Chandigarh</h5>
-                    <p>The City Beautiful</p>
-                </div>
+            <div class="service-card">
+                <img src="{% static 'images/im4.jpeg' %}" class="img-fluid rounded" alt="Outstation Taxi">
             </div>
         </div>
     </div>
@@ -248,10 +232,10 @@
 <!-- Floating Action Buttons - WhatsApp & Call -->
 <div class="floating-buttons">
     <!-- WhatsApp Button -->
-    <a href="https://wa.me/919879230065?text=Hi%20Pathan%20Tours,%20I%20want%20to%20book%20a%20trip%20or%20inquire%20about%20your%20services" class="floating-btn whatsapp-btn" target="_blank" title="Chat on WhatsApp">
+    <!-- <a href="https://wa.me/919879230065?text=Hi%20Pathan%20Tours,%20I%20want%20to%20book%20a%20trip%20or%20inquire%20about%20your%20services" class="floating-btn whatsapp-btn" target="_blank" title="Chat on WhatsApp">
         <i class="fab fa-whatsapp"></i>
         <span class="btn-tooltip">Chat Now</span>
-    </a>
+    </a> -->
 
     <!-- Call Button -->
     <a href="tel:9879230065" class="floating-btn call-btn" title="Call Now">
@@ -290,31 +274,21 @@
         color: #198754;
     }
     
-    .destination-card {
-        position: relative;
+    .service-card {
         overflow: hidden;
         border-radius: 10px;
         height: 200px;
     }
     
-    .destination-card img {
+    .service-card img {
         transition: transform 0.5s;
         height: 100%;
         width: 100%;
         object-fit: cover;
     }
     
-    .destination-card:hover img {
+    .service-card:hover img {
         transform: scale(1.1);
-    }
-    
-    .destination-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 0 0 10px 10px;
     }
     
     .cta-section {

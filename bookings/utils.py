@@ -168,3 +168,5 @@ def create_invoice_pdf(booking):
     p.save()
     
     return file_path
+
+
