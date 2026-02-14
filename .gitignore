@@ -10,7 +10,7 @@ __pycache__/
 # Virtual Environment
 venv/
 venv copy/
-env/
+.env/
 ENV/
 .venv/
 
@@ -46,4 +46,4 @@ desktop.ini
 
 # Log files
 *.log
-logs/
+logs/".env" 
