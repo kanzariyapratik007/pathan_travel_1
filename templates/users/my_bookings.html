@@ -1,0 +1,267 @@
+{% extends 'base.html' %} {% load static %} {% block title %}My Bookings - Pathan Travels{% endblock %} {% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold text-success mb-3">
+                <i class="fas fa-ticket-alt me-2"></i>My Bookings
+            </h1>
+            <p class="text-muted">View all your one-way and package bookings</p>
+        </div>
+    </div>
+
+    <!-- User Info -->
+    <div class="alert alert-success mb-4">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-user-circle fa-2x me-3"></i>
+            <div>
+                <h6 class="mb-1">Logged in as: <strong>{{ user_email }}</strong></h6>
+                <p class="mb-0">Phone: <strong>{{ user_phone|default:"Not provided" }}</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center py-4">
+                    <i class="fas fa-car fa-3x mb-3"></i>
+                    <h3>{{ one_way_count }}</h3>
+                    <h5>One-way Bookings</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center py-4">
+                    <i class="fas fa-suitcase fa-3x mb-3"></i>
+                    <h3>{{ package_count }}</h3>
+                    <h5>Package Bookings</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- One-way Bookings Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-car me-2"></i>One-way Bookings
+                    </h5>
+                    <span class="badge bg-light text-dark">{{ one_way_count }} bookings</span>
+                </div>
+                <div class="card-body">
+                    {% if one_way_bookings %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Invoice No</th>
+                                    <th>Customer</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Route</th>
+                                    <th>Travel Date</th>
+                                    <th>Distance</th>
+                                    <th>Total</th>
+                                    <th>Advance</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in one_way_bookings %}
+                                <tr>
+                                    <td>
+                                        <strong class="text-success">{{ booking.invoice_no|default:"N/A" }}</strong>
+                                    </td>
+                                    <td>{{ booking.name }}</td>
+                                    <td>{{ booking.phone }}</td>
+                                    <td>
+                                        {% if booking.email %}
+                                        <small>{{ booking.email }}</small> {% else %}
+                                        <span class="badge bg-warning">No Email</span> {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ booking.pickup|truncatechars:15 }} → {{ booking.drop|truncatechars:15 }}</small>
+                                    </td>
+                                    <td>
+                                        {{ booking.travel_date|date:"d-m-Y" }}<br>
+                                        <small class="text-muted">{{ booking.travel_time|time:"h:i A" }}</small>
+                                    </td>
+                                    <td>{{ booking.distance_km }} KM</td>
+                                    <td>₹{{ booking.total_price }}</td>
+                                    <td>₹{{ booking.advance_paid }}</td>
+                                    <td>
+                                        {% if booking.status == 'CONFIRMED' %}
+                                        <span class="badge bg-success">Confirmed</span> {% elif booking.status == 'PENDING' %}
+                                        <span class="badge bg-warning text-dark">Pending</span> {% elif booking.status == 'COMPLETED' %}
+                                        <span class="badge bg-info">Completed</span> {% elif booking.status == 'CANCELLED' %}
+                                        <span class="badge bg-danger">Cancelled</span> {% else %}
+                                        <span class="badge bg-secondary">{{ booking.status }}</span> {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="{% url 'invoice_pdf' booking.id %}" class="btn btn-outline-success" target="_blank" title="Download Invoice">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </a>
+                                            {% if booking.status == 'PENDING' %}
+                                            <a href="{% url 'initiate_payment' booking.id %}" class="btn btn-outline-warning" title="Complete Payment">
+                                                <i class="fas fa-credit-card"></i>
+                                            </a>
+                                            {% endif %}
+                                            <a href="{% url 'booking_confirmation' booking.id %}" class="btn btn-outline-info" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-car fa-4x text-muted mb-3"></i>
+                        <h5 class="text-muted">No one-way bookings yet</h5>
+                        <p class="mb-3">Book your first trip with Pathan Travels!</p>
+                        <a href="{% url 'book_trip' %}" class="btn btn-success">
+                            <i class="fas fa-calendar-check me-2"></i>Book Now
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Package Bookings Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-suitcase me-2"></i>Package Bookings
+                    </h5>
+                    <span class="badge bg-light text-dark">{{ package_count }} bookings</span>
+                </div>
+                <div class="card-body">
+                    {% if package_bookings %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Customer</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Package</th>
+                                    <th>Travel Date</th>
+                                    <th>Passengers</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in package_bookings %}
+                                <tr>
+                                    <td>
+                                        <strong class="text-info">{{ booking.invoice_no }}</strong>
+                                    </td>
+                                    <td>{{ booking.customer_name }}</td>
+                                    <td>{{ booking.customer_phone }}</td>
+                                    <td>
+                                        {% if booking.customer_email %}
+                                        <small>{{ booking.customer_email }}</small> {% else %}
+                                        <span class="badge bg-warning">No Email</span> {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ booking.package.name|truncatechars:25 }}
+                                    </td>
+                                    <td>
+                                        {{ booking.travel_date|date:"d-m-Y" }}<br>
+                                        <small class="text-muted">{{ booking.travel_time|time:"h:i A" }}</small>
+                                    </td>
+                                    <td>{{ booking.passengers_count }}</td>
+                                    <td>₹{{ booking.total_amount }}</td>
+                                    <td>
+                                        {% if booking.status == 'CONFIRMED' %}
+                                        <span class="badge bg-success">Confirmed</span> {% elif booking.status == 'PENDING' %}
+                                        <span class="badge bg-warning text-dark">Pending</span> {% elif booking.status == 'COMPLETED' %}
+                                        <span class="badge bg-info">Completed</span> {% elif booking.status == 'CANCELLED' %}
+                                        <span class="badge bg-danger">Cancelled</span> {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="{% url 'package_invoice' booking.id %}" class="btn btn-outline-info" target="_blank" title="Download Invoice">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </a>
+                                            <a href="{% url 'package_booking_confirmation' booking.id %}" class="btn btn-outline-info" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+                        <h5 class="text-muted">No package bookings yet</h5>
+                        <p class="mb-3">Explore our exciting tour packages!</p>
+                        <a href="{% url 'package_list' %}" class="btn btn-info">
+                            <i class="fas fa-search me-2"></i>Browse Packages
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table th {
+        font-weight: 600;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    .table td {
+        vertical-align: middle;
+    }
+    
+    .badge {
+        padding: 0.5rem 0.8rem;
+        font-weight: 500;
+    }
+    
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .card-header {
+        border-bottom: none;
+    }
+    
+    .btn-group-sm .btn {
+        padding: 0.25rem 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .table-responsive {
+            font-size: 0.85rem;
+        }
+        .btn-group-sm .btn {
+            padding: 0.2rem 0.3rem;
+            font-size: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}

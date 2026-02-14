@@ -1,0 +1,148 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Edit Profile - Pathan Travels{% endblock %} {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white text-center py-4">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-edit me-2"></i>Edit Profile
+                    </h4>
+                </div>
+
+                <div class="card-body p-4">
+                    {% if messages %} {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endfor %} {% endif %}
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <!-- Personal Information -->
+                            <div class="col-md-6 mb-4">
+                                <h5 class="text-success mb-3">👤 Personal Information</h5>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">First Name</label>
+                                    <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}" placeholder="Enter first name">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}" placeholder="Enter last name">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Phone Number</label>
+                                    <input type="tel" name="phone" class="form-control" value="{{ user.phone }}" placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10">
+                                    <small class="text-muted">Enter 10-digit mobile number</small>
+                                </div>
+                            </div>
+
+                            <!-- Address Information -->
+                            <div class="col-md-6 mb-4">
+                                <h5 class="text-success mb-3">📍 Address Information</h5>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Address</label>
+                                    <textarea name="address" class="form-control" rows="2" placeholder="Enter your address">{{ profile.address }}</textarea>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold">City</label>
+                                        <input type="text" name="city" class="form-control" value="{{ profile.city }}" placeholder="City">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold">State</label>
+                                        <input type="text" name="state" class="form-control" value="{{ profile.state }}" placeholder="State">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold">Pincode</label>
+                                        <input type="text" name="pincode" class="form-control" value="{{ profile.pincode }}" placeholder="6-digit pincode" pattern="[0-9]{6}" maxlength="6">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold">Date of Birth</label>
+                                        <input type="date" name="date_of_birth" class="form-control" value="{{ profile.date_of_birth|date:'Y-m-d' }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profile Picture -->
+                            <div class="col-12 mb-4">
+                                <h5 class="text-success mb-3">🖼️ Profile Picture</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="me-4">
+                                        {% if profile.profile_picture %}
+                                        <img src="{{ profile.profile_picture.url }}" alt="Current Profile" class="rounded-circle" width="100" height="100" style="object-fit: cover;"> {% else %}
+                                        <div class="rounded-circle bg-success d-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
+                                            <i class="fas fa-user fa-3x text-white"></i>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <input type="file" name="profile_picture" class="form-control" accept="image/*">
+                                        <small class="text-muted">Leave empty to keep current picture</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="submit" class="btn btn-success px-5 py-2">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary px-5 py-2">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="bg-light rounded-3 p-3 mt-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-info-circle text-success fa-2x me-3"></i>
+                    <div>
+                        <h6 class="mb-1">Why update your profile?</h6>
+                        <p class="mb-0 small text-muted">
+                            Complete profile helps us serve you better and faster booking process.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-format phone number
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneInput = document.querySelector('input[name="phone"]');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '').slice(0, 10);
+            });
+        }
+
+        const pincodeInput = document.querySelector('input[name="pincode"]');
+        if (pincodeInput) {
+            pincodeInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '').slice(0, 6);
+            });
+        }
+    });
+</script>
+{% endblock %}

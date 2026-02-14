@@ -14,6 +14,7 @@ import razorpay
 import os
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+from django.contrib.auth.decorators import login_required
 
 # Initialize Razorpay client
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
@@ -25,7 +26,7 @@ def package_list(request):
     packages = Package.objects.filter(is_active=True)
     return render(request, 'packages/package_list.html', {'packages': packages})
 
-
+@login_required
 def package_detail(request, package_id):
     """Display package details and booking form"""
     package = get_object_or_404(Package, id=package_id, is_active=True)

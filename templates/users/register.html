@@ -1,0 +1,128 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Register - Pathan Travels{% endblock %} {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white text-center py-4">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-plus me-2"></i>Create Account
+                    </h4>
+                    <p class="mb-0 text-white-50">Join Pathan Travels for exclusive offers</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <form method="post" novalidate>
+                        {% csrf_token %} {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+
+                        <!-- Email Field -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-envelope text-success me-1"></i>Email Address *
+                            </label> {{ form.email }} {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Username Field -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-user text-success me-1"></i>Username *
+                            </label> {{ form.username }} {% if form.username.errors %}
+                            <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+                            {% endif %}
+                            <div class="form-text">Choose a unique username</div>
+                        </div>
+
+                        <!-- Phone Field -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-phone text-success me-1"></i>Mobile Number *
+                            </label> {{ form.phone }} {% if form.phone.errors %}
+                            <div class="text-danger small mt-1">{{ form.phone.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-lock text-success me-1"></i>Password *
+                            </label> {{ form.password1 }} {% if form.password1.errors %}
+                            <div class="text-danger small mt-1">{{ form.password1.errors }}</div>
+                            {% endif %}
+                            <div class="form-text">
+                                <small>Use at least 8 characters, not entirely numeric</small>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password Field -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-lock text-success me-1"></i>Confirm Password *
+                            </label> {{ form.password2 }} {% if form.password2.errors %}
+                            <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Terms & Conditions -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="#" class="text-success">Terms of Service</a> 
+                                    and <a href="#" class="text-success">Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-success w-100 py-3 fw-semibold">
+                            <i class="fas fa-paper-plane me-2"></i>Register & Verify Email
+                        </button>
+
+                        <!-- Login Link -->
+                        <div class="text-center mt-4">
+                            <p class="mb-0">Already have an account?
+                                <a href="{% url 'login' %}" class="text-success fw-semibold">Login here</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="row mt-4 g-3">
+                <div class="col-6">
+                    <div class="bg-light rounded-3 p-3 text-center">
+                        <i class="fas fa-shield-alt text-success fa-2x mb-2"></i>
+                        <h6 class="mb-0">Secure Account</h6>
+                        <small class="text-muted">OTP verification</small>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="bg-light rounded-3 p-3 text-center">
+                        <i class="fas fa-tags text-success fa-2x mb-2"></i>
+                        <h6 class="mb-0">Exclusive Offers</h6>
+                        <small class="text-muted">Member only deals</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-format phone number
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneInput = document.querySelector('input[name="phone"]');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '').slice(0, 10);
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Verify Email - Pathan Travels{% endblock %} {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white text-center py-4">
+                    <div class="mb-3">
+                        <i class="fas fa-envelope fa-3x"></i>
+                    </div>
+                    <h4 class="mb-0">Verify Your Email</h4>
+                    <p class="mb-0 text-white-50">Enter the 6-digit OTP sent to your email</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="alert alert-info text-center">
+                        <strong>{{ user_email }}</strong>
+                    </div>
+
+                    <form method="post" class="text-center">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">OTP Verification Code</label>
+                            <div class="d-flex justify-content-center">
+                                <input type="text" name="otp" class="form-control form-control-lg text-center" style="font-size: 1.8rem; letter-spacing: 8px; width: 200px;" maxlength="6" pattern="[0-9]{6}" placeholder="123456" autocomplete="off" required>
+                            </div>
+                            {% if form.otp.errors %}
+                            <div class="text-danger small mt-1">{{ form.otp.errors }}</div>
+                            {% endif %}
+                            <div class="form-text mt-2">
+                                <i class="fas fa-clock me-1"></i> OTP is valid for 10 minutes
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 py-3 fw-semibold mb-3">
+                            <i class="fas fa-check-circle me-2"></i>Verify & Continue
+                        </button>
+
+                        <div class="text-center">
+                            <p class="mb-1">Didn't receive the code?</p>
+                            <a href="{% url 'resend_otp' %}" class="text-success fw-semibold">
+                                <i class="fas fa-redo-alt me-1"></i>Resend OTP
+                            </a>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <a href="{% url 'register' %}" class="text-muted small">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Registration
+                        </a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="bg-light rounded-3 p-3 mt-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-info-circle text-success fa-2x me-3"></i>
+                    <div>
+                        <h6 class="mb-1">Why verify your email?</h6>
+                        <p class="mb-0 small text-muted">
+                            Email verification helps us secure your account and send important booking updates.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-submit when OTP is fully entered
+    document.addEventListener('DOMContentLoaded', function() {
+        const otpInput = document.querySelector('input[name="otp"]');
+        if (otpInput) {
+            otpInput.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '').slice(0, 6);
+
+                if (this.value.length === 6) {
+                    // Optional: Auto-submit form
+                    // document.querySelector('form').submit();
+                }
+            });
+
+            // Auto-focus on load
+            otpInput.focus();
+        }
+    });
+</script>
+{% endblock %}

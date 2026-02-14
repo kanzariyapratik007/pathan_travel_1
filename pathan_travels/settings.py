@@ -30,8 +30,13 @@ INSTALLED_APPS = [
     'packages',
     'bookings',
     'gallery',
+    'users',
 ]
+AUTH_USER_MODEL = 'users.User'
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -81,11 +86,11 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -124,3 +129,88 @@ RAZORPAY_KEY_ID = 'rzp_test_e664V0FP0zQy7N'  # તમારી key
 RAZORPAY_KEY_SECRET = 'QdnuRxUHrPGeiJc9lDTXYPO7'  # તમારી secret
 
 
+# Jazzmin Settings for better admin UI
+JAZZMIN_SETTINGS = {
+    "site_title": "Pathan Travels Admin",
+    "site_header": "Pathan Travels",
+    "site_brand": "Pathan Travels",
+    "site_logo": None,
+    "welcome_sign": "Welcome to Pathan Travels Admin Panel",
+    "copyright": "Pathan Travels",
+    "search_model": ["users.User", "bookings.Booking"],
+    
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "View Site", "url": "/", "new_window": True},
+    ],
+    
+    "usermenu_links": [
+        {"name": "Profile", "url": "admin:users_user_changelist"},
+    ],
+    
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    
+    "icons": {
+        "users.User": "fas fa-user",
+        "users.UserProfile": "fas fa-id-card",
+        "bookings.Booking": "fas fa-ticket-alt",
+        "packages.Package": "fas fa-box",
+        "packages.PackageBooking": "fas fa-shopping-cart",
+        "gallery.GalleryImage": "fas fa-image",
+        "gallery.GalleryVideo": "fas fa-video",
+        "auth.Group": "fas fa-users-cog",
+    },
+    
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    
+    "related_modal_active": True,
+    
+    "custom_links": {
+        "users": [{
+            "name": "User Statistics", 
+            "url": "admin:users_user_changelist", 
+            "icon": "fas fa-chart-bar",
+        }]
+    },
+    
+    "show_ui_builder": True,
+    
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {
+        "users.User": "collapsible",
+    },
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-success",
+    "navbar": "navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-success",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": True,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": True,
+    "theme": "default",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success",
+    },
+}

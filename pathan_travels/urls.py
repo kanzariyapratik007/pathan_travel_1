@@ -8,8 +8,10 @@ from core.views import home, contact  # 'contact_view' નહીં, 'contact'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
     path('', home, name='home'),
     path('contact/', contact, name='contact'),  # name='contact' છે
+    path('', include('users.urls')),
     path('book/', include('bookings.urls')),
     path('packages/', include('packages.urls')),
     path('gallery/', include('gallery.urls')),
